@@ -41,10 +41,10 @@
 
   <!-- Mobile menu -->
   <div id="mobile-menu" class="mobile-menu hidden">
-    <a href="#fitur"      class="mobile-link" onclick="closeMobileMenu()">Fitur</a>
-    <a href="#cara-kerja" class="mobile-link" onclick="closeMobileMenu()">Cara Kerja</a>
-    <a href="#harga"      class="mobile-link" onclick="closeMobileMenu()">Harga</a>
-    <a href="#faq"        class="mobile-link" onclick="closeMobileMenu()">FAQ</a>
+    <a href="#fitur"      class="mobile-link act-close">Fitur</a>
+    <a href="#cara-kerja" class="mobile-link act-close">Cara Kerja</a>
+    <a href="#harga"      class="mobile-link act-close">Harga</a>
+    <a href="#faq"        class="mobile-link act-close">FAQ</a>
     <div style="display:flex;gap:12px;padding:8px 0;">
       <a href="/login"    class="btn-ghost" style="flex:1;text-align:center;">Masuk</a>
       <a href="/register" class="btn-primary" style="flex:1;text-align:center;">Daftar Gratis</a>
@@ -226,9 +226,14 @@
     mobileBtn.setAttribute('aria-expanded', String(!isOpen));
   });
 
-  (window as any).closeMobileMenu = () => {
+  const closeMobileMenu = () => {
     mobileMenu.classList.add('hidden');
     iconMenu.classList.remove('hidden');
     iconClose.classList.add('hidden');
+    mobileBtn.setAttribute('aria-expanded', 'false');
   };
+
+  document.querySelectorAll('.act-close').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+  });
 </script>

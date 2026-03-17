@@ -1,0 +1,157 @@
+---
+import DashboardLayout from '../../layouts/DashboardLayout.astro';
+---
+
+<DashboardLayout title="Materi Pembelajaran" activePage="modules" role="learner">
+  <div class="module-view" id="module-view" style="display:none;">
+    <!-- Head -->
+    <a href="/dashboard" class="back-link">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/></svg>
+      Kembali ke Daftar
+    </a>
+    
+    <div class="header-video">
+      <h1 class="mod-title" id="mod-title">Judul Modul</h1>
+      <p class="mod-desc" id="mod-desc">Deskripsi modul...</p>
+    </div>
+
+    <!-- Video Frame -->
+    <div class="video-container">
+      <div class="video-placeholder" id="video-placeholder">
+        <svg width="40" height="40" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+      <iframe id="vid-frame" class="vid-frame hidden" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <!-- Actions Area -->
+    <div class="actions-area">
+      <div class="action-info">
+        <div class="ai-icon">🏆</div>
+        <div>
+          <div style="font-size:14px;font-weight:700;color:#fff;">Kuis Materi Tersedia</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.4);">Tonton video di atas lalu uji kemampuanmu untuk mendapatkan poin.</div>
+        </div>
+      </div>
+      <!-- Kita akan connect kuis ini ke sistem Quiz yang aslinya kelak -->
+      <button class="btn-start" id="btn-start-quiz">Mulai Kuis Sekarang!</button>
+    </div>
+
+  </div>
+  
+  <div id="loader" style="text-align:center;color:rgba(255,255,255,0.4);padding:40px;">Mengambil data materi...</div>
+
+</DashboardLayout>
+
+<style>
+  .back-link { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.4); text-decoration: none; margin-bottom: 24px; transition: color 0.2s;}
+  .back-link:hover { color: #fff; }
+  
+  .header-video { margin-bottom: 24px; }
+  .mod-title { font-size: 28px; font-weight: 900; color: #fff; margin-bottom: 8px; }
+  .mod-desc { font-size: 15px; line-height: 1.6; color: rgba(255,255,255,0.5); max-width: 800px; }
+
+  .video-container {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 32px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    position: relative;
+  }
+  .video-placeholder {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.1);
+  }
+  .vid-frame { width: 100%; height: 100%; border: none; z-index: 2; position: relative; }
+  .hidden { display: none; }
+
+  .actions-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    background: rgba(8,20,50,0.5);
+    border: 1px solid rgba(59,130,246,0.15);
+    padding: 24px 32px;
+    border-radius: 20px;
+  }
+  .action-info { display: flex; align-items: center; gap: 16px; }
+  .ai-icon { font-size: 28px; }
+  
+  .btn-start {
+    padding: 14px 28px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #10b981, #059669); /* emerald style for Start */
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(16,185,129,0.3);
+    transition: all 0.2s ease;
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(16,185,129,0.5); }
+
+</style>
+
+<script>
+  import { supabase } from '../../lib/supabase';
+
+  function extractYoutubeId(url: string) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  }
+
+  window.addEventListener('dashboard:ready', async () => {
+    // 1. Dapatkan parameter id dari query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const modId = urlParams.get('id');
+
+    if (!modId) {
+      document.getElementById('loader')!.textContent = 'Modul tidak ditemukan.';
+      return;
+    }
+
+    // 2. Fetch Data dari Database
+    const { data: mod, error } = await supabase.from('modules').select('*').eq('id', modId).single();
+
+    if (error || !mod) {
+      document.getElementById('loader')!.textContent = 'Modul tidak ditemukan atau gagal dimuat.';
+      return;
+    }
+
+    // 3. Populate DOM
+    document.getElementById('mod-title')!.textContent = mod.title;
+    document.getElementById('mod-desc')!.textContent = mod.description || 'Tidak ada deskripsi.';
+
+    // 4. Proses Video URL (Khusus untuk Embed YouTube)
+    if (mod.video_url) {
+      const vidId = extractYoutubeId(mod.video_url);
+      const iframe = document.getElementById('vid-frame') as HTMLIFrameElement;
+      
+      if (vidId) {
+        iframe.src = `https://www.youtube.com/embed/${vidId}?rel=0`;
+        iframe.classList.remove('hidden');
+        document.getElementById('video-placeholder')!.style.display = 'none';
+      } else {
+        // Asumsi ini link video mp4 langsung
+        document.getElementById('video-placeholder')!.innerHTML = `<video controls src="${mod.video_url}" style="width:100%;height:100%;background:#000;"></video>`;
+      }
+    }
+
+    // Tampilkan View Utama
+    document.getElementById('loader')!.style.display = 'none';
+    document.getElementById('module-view')!.style.display = 'block';
+
+    // Set Button Action (Sementara trigger alert karena sistem kuisnya belum jadi final)
+    document.getElementById('btn-start-quiz')!.addEventListener('click', () => {
+      alert('Sistem kuis (FastAPI integration) belum diset untuk modul ID: ' + mod.id);
+      // Naskah aslinya akan diarahkan ke /dashboard/quiz?module_id=...
+    });
+  });
+</script>

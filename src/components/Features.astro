@@ -1,7 +1,9 @@
 ---
 const features = [
   {
-    emoji: '📊',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+    </svg>`,
     tag: 'Real-time',
     title: 'Pelacakan Progres Real-time',
     desc: 'Pantau perkembangan belajar secara langsung. Grafik performa, statistik akurasi, dan laporan detail hadir dalam satu dashboard yang elegan.',
@@ -9,7 +11,9 @@ const features = [
     color: 'blue',
   },
   {
-    emoji: '🎬',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+    </svg>`,
     tag: 'Video HD',
     title: 'Modul Video Berkualitas Tinggi',
     desc: 'Akses ratusan video dari instruktur terbaik. Belajar kapan saja dan di mana saja dengan kualitas video yang jernih dan materi yang terstruktur.',
@@ -17,7 +21,9 @@ const features = [
     color: 'cyan',
   },
   {
-    emoji: '🤖',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" width="28" height="28">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z" />
+    </svg>`,
     tag: 'Smart AI',
     title: 'Penilaian Cerdas (Smart Scoring)',
     desc: 'Sistem AI yang memberikan umpan balik instan dan analisis mendalam untuk membantu kamu memahami area yang perlu ditingkatkan.',
@@ -53,8 +59,8 @@ const features = [
     <div class="feat-grid">
       {features.map((f) => (
         <div class={`feat-card feat-card--${f.color}`}>
-          <div class={`feat-emoji-wrap feat-emoji-wrap--${f.color}`}>
-            <span style="font-size:28px;">{f.emoji}</span>
+          <div class={`feat-icon-wrap feat-icon-wrap--${f.color}`}>
+            <Fragment set:html={f.icon} />
           </div>
           <div class={`feat-tag feat-tag--${f.color}`}>{f.tag}</div>
           <h3 class="feat-title">{f.title}</h3>
@@ -174,17 +180,17 @@ const features = [
   .feat-card--cyan:hover  { border-color: rgba(6,182,212,0.35);  box-shadow: 0 24px 60px rgba(6,182,212,0.15); }
   .feat-card--sky:hover   { border-color: rgba(56,189,248,0.35); box-shadow: 0 24px 60px rgba(56,189,248,0.15); }
 
-  .feat-emoji-wrap {
+  .feat-icon-wrap {
     width: 60px; height: 60px;
     border-radius: 18px;
     display: flex; align-items: center; justify-content: center;
     margin-bottom: 20px;
     transition: transform 0.3s;
   }
-  .feat-card:hover .feat-emoji-wrap { transform: scale(1.12) rotate(-4deg); }
-  .feat-emoji-wrap--blue { background: rgba(37,99,235,0.15); border: 1px solid rgba(59,130,246,0.2); }
-  .feat-emoji-wrap--cyan { background: rgba(6,182,212,0.12);  border: 1px solid rgba(6,182,212,0.2);  }
-  .feat-emoji-wrap--sky  { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.2); }
+  .feat-card:hover .feat-icon-wrap { transform: scale(1.12) rotate(-4deg); }
+  .feat-icon-wrap--blue { background: rgba(37,99,235,0.15); border: 1px solid rgba(59,130,246,0.2); color: #60a5fa; }
+  .feat-icon-wrap--cyan { background: rgba(6,182,212,0.12);  border: 1px solid rgba(6,182,212,0.2);  color: #22d3ee; }
+  .feat-icon-wrap--sky  { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.2); color: #38bdf8; }
 
   .feat-tag {
     display: inline-block;

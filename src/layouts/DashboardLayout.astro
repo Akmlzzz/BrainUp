@@ -1,0 +1,327 @@
+---
+interface Props {
+  title?: string;
+  activePage?: string;
+  role?: 'admin' | 'learner';
+}
+
+const { title = 'Dashboard', activePage = 'dashboard', role = 'learner' } = Astro.props;
+
+const learnerNav = [
+  { id: 'dashboard', label: 'Dashboard',   href: '/dashboard',  icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>` },
+  { id: 'modules',   label: 'Modul Belajar', href: '/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>` },
+  { id: 'quiz',      label: 'Kuis Saya',    href: '/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"/></svg>` },
+  { id: 'profile',   label: 'Profil',       href: '/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>` },
+];
+
+const adminNav = [
+  { id: 'dashboard', label: 'Dashboard',   href: '/admin/dashboard',  icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>` },
+  { id: 'modules',   label: 'Kelola Modul', href: '/admin/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>` },
+  { id: 'users',     label: 'Pengguna',    href: '/admin/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/></svg>` },
+  { id: 'settings',  label: 'Pengaturan',  href: '/admin/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>` },
+];
+
+const navItems = role === 'admin' ? adminNav : learnerNav;
+---
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{title} — BrainUp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #040d1e;
+      color: #fff;
+      display: flex;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #040d1e; }
+    ::-webkit-scrollbar-thumb { background: #1d4ed8; border-radius: 99px; }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 260px;
+      flex-shrink: 0;
+      background: rgba(8, 20, 50, 0.95);
+      border-right: 1px solid rgba(59,130,246,0.1);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      left: 0; top: 0; bottom: 0;
+      z-index: 100;
+      backdrop-filter: blur(20px);
+    }
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 24px 20px;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .sidebar-logo-icon {
+      width: 36px; height: 36px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, #3b82f6, #06b6d4);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+      flex-shrink: 0;
+    }
+    .sidebar-logo-text { font-size: 18px; font-weight: 900; color: #fff; }
+    .sidebar-logo-text span {
+      background: linear-gradient(135deg, #60a5fa, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .sidebar-role-badge {
+      margin: 0 20px 16px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      background: rgba(37,99,235,0.1);
+      border: 1px solid rgba(59,130,246,0.15);
+      font-size: 10px;
+      font-weight: 700;
+      color: #93c5fd;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-align: center;
+    }
+    .sidebar-nav {
+      flex: 1;
+      padding: 8px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      overflow-y: auto;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      transition: all 0.2s;
+    }
+    .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .nav-item:hover { background: rgba(255,255,255,0.04); color: rgba(255,255,255,0.8); }
+    .nav-item.active {
+      background: rgba(37,99,235,0.15);
+      color: #fff;
+      border: 1px solid rgba(59,130,246,0.2);
+    }
+    .nav-item.active svg { color: #60a5fa; }
+    .sidebar-bottom {
+      padding: 16px 12px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sidebar-user {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+    }
+    .user-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .user-name { font-size: 13px; font-weight: 700; color: rgba(255,255,255,0.85); }
+    .user-email { font-size: 10px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+    .btn-logout {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: none;
+      color: rgba(255,255,255,0.35);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      width: 100%;
+      transition: all 0.2s;
+      text-align: left;
+    }
+    .btn-logout:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.2); color: #fca5a5; }
+    .btn-logout svg { width: 16px; height: 16px; }
+
+    /* ── Main content ── */
+    .main {
+      flex: 1;
+      margin-left: 260px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      height: 64px;
+      background: rgba(4,13,30,0.9);
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      backdrop-filter: blur(20px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      z-index: 50;
+    }
+    .topbar-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .page-content {
+      padding: 32px 28px;
+      flex: 1;
+    }
+
+    /* ── Auth Guard ── */
+    .auth-loading {
+      position: fixed;
+      inset: 0;
+      background: #040d1e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .spinner {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      border: 3px solid rgba(59,130,246,0.15);
+      border-top-color: #3b82f6;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body data-role={role}>
+  <!-- Auth Loading overlay -->
+  <div class="auth-loading" id="auth-loading">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <a href="/" class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26C17.81 13.47 19 11.38 19 9c0-3.87-3.13-7-7-7z" fill="white"/>
+          <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1z" fill="white" opacity="0.7"/>
+        </svg>
+      </div>
+      <span class="sidebar-logo-text">Brain<span>Up</span></span>
+    </a>
+    <div class="sidebar-role-badge" id="role-badge">{role === 'admin' ? '⚡ Admin Panel' : '🎓 Learner'}</div>
+
+    <nav class="sidebar-nav">
+      {navItems.map(item => (
+        <a href={item.href} class={`nav-item ${activePage === item.id ? 'active' : ''}`}>
+          <Fragment set:html={item.icon} />
+          {item.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="sidebar-bottom">
+      <div class="sidebar-user">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <div>
+          <div class="user-name" id="user-name">Loading...</div>
+          <div class="user-email" id="user-email"></div>
+        </div>
+      </div>
+      <button class="btn-logout" id="btn-logout">
+        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
+        </svg>
+        Keluar
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main" id="main-content">
+    <div class="topbar">
+      <span class="topbar-title">{title}</span>
+    </div>
+    <div class="page-content">
+      <slot />
+    </div>
+  </main>
+
+  <script>
+    import { supabase, signOut, getUserRole } from '../lib/supabase';
+
+    const requiredRole = document.body.dataset.role as 'admin' | 'learner' | undefined;
+
+    async function initDashboard() {
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!session) {
+        window.location.replace('/login');
+        return;
+      }
+
+      const role = await getUserRole(session.user.id);
+
+      // Role-based redirect guard
+      if (requiredRole === 'admin' && role !== 'admin') {
+        window.location.replace('/dashboard');
+        return;
+      }
+      if (requiredRole === 'learner' && role === 'admin') {
+        window.location.replace('/admin/dashboard');
+        return;
+      }
+
+      // Populate user info
+      const email = session.user.email ?? '';
+      const initials = email.charAt(0).toUpperCase();
+      document.getElementById('user-avatar')!.textContent = initials;
+      document.getElementById('user-name')!.textContent = email.split('@')[0];
+      document.getElementById('user-email')!.textContent = email;
+
+      // Hide loading
+      document.getElementById('auth-loading')!.classList.add('hidden');
+
+      // Store session for use in page scripts
+      (window as any).__supabaseSession = session;
+      window.dispatchEvent(new CustomEvent('dashboard:ready', { detail: { session, role } }));
+    }
+
+    document.getElementById('btn-logout')?.addEventListener('click', () => signOut());
+
+    initDashboard();
+  </script>
+</body>
+</html>

@@ -1,0 +1,254 @@
+---
+const features = [
+  {
+    emoji: '📊',
+    tag: 'Real-time',
+    title: 'Pelacakan Progres Real-time',
+    desc: 'Pantau perkembangan belajar secara langsung. Grafik performa, statistik akurasi, dan laporan detail hadir dalam satu dashboard yang elegan.',
+    points: ['Dashboard interaktif', 'Laporan mingguan otomatis', 'Analitik per topik'],
+    color: 'blue',
+  },
+  {
+    emoji: '🎬',
+    tag: 'Video HD',
+    title: 'Modul Video Berkualitas Tinggi',
+    desc: 'Akses ratusan video dari instruktur terbaik. Belajar kapan saja dan di mana saja dengan kualitas video yang jernih dan materi yang terstruktur.',
+    points: ['500+ video HD', 'Subtitel otomatis AI', 'Unduh untuk offline'],
+    color: 'cyan',
+  },
+  {
+    emoji: '🤖',
+    tag: 'Smart AI',
+    title: 'Penilaian Cerdas (Smart Scoring)',
+    desc: 'Sistem AI yang memberikan umpan balik instan dan analisis mendalam untuk membantu kamu memahami area yang perlu ditingkatkan.',
+    points: ['Umpan balik instan', 'Deteksi kelemahan belajar', 'Rekomendasi materi AI'],
+    color: 'sky',
+  },
+];
+---
+
+<section id="fitur">
+  <div class="feat-bg">
+    <div class="feat-blob feat-blob-1"></div>
+    <div class="feat-blob feat-blob-2"></div>
+  </div>
+
+  <div class="feat-container">
+    <!-- Section Header -->
+    <div class="section-header">
+      <div class="section-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+        Fitur Unggulan
+      </div>
+      <h2 class="section-title">
+        Semua yang Kamu Butuhkan<br/>
+        <span class="gradient-text">dalam Satu Platform</span>
+      </h2>
+      <p class="section-sub">
+        BrainUp dirancang untuk memaksimalkan pengalaman belajarmu dengan teknologi AI terkini dan pendekatan yang telah terbukti efektif.
+      </p>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="feat-grid">
+      {features.map((f) => (
+        <div class={`feat-card feat-card--${f.color}`}>
+          <div class={`feat-emoji-wrap feat-emoji-wrap--${f.color}`}>
+            <span style="font-size:28px;">{f.emoji}</span>
+          </div>
+          <div class={`feat-tag feat-tag--${f.color}`}>{f.tag}</div>
+          <h3 class="feat-title">{f.title}</h3>
+          <p class="feat-desc">{f.desc}</p>
+          <ul class="feat-list">
+            {f.points.map(p => (
+              <li class={`feat-item feat-item--${f.color}`}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                {p}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+
+    <!-- Stats Bar -->
+    <div class="stats-bar">
+      {[
+        { value: '50K+',  label: 'Pelajar Aktif'   },
+        { value: '1.2K+', label: 'Kuis Tersedia'   },
+        { value: '500+',  label: 'Video Modul'      },
+        { value: '4.9★',  label: 'Rating Pengguna' },
+      ].map((s, i) => (
+        <>
+          <div class="stats-item">
+            <span class="stats-value gradient-text">{s.value}</span>
+            <span class="stats-label">{s.label}</span>
+          </div>
+          {i < 3 && <div class="stats-sep"></div>}
+        </>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #fitur {
+    position: relative;
+    padding: 100px 32px;
+    overflow: hidden;
+  }
+  .feat-bg { position: absolute; inset: 0; pointer-events: none; }
+  .feat-blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(130px);
+  }
+  .feat-blob-1 {
+    width: 500px; height: 500px;
+    top: -50px; right: 10%;
+    background: radial-gradient(circle, rgba(37,99,235,0.18) 0%, transparent 70%);
+  }
+  .feat-blob-2 {
+    width: 400px; height: 400px;
+    bottom: 0; left: 10%;
+    background: radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 70%);
+  }
+
+  .feat-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Section header */
+  .section-header { text-align: center; margin-bottom: 72px; }
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(37,99,235,0.1);
+    border: 1px solid rgba(59,130,246,0.22);
+    padding: 8px 18px;
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #93c5fd;
+    margin-bottom: 20px;
+  }
+  .section-title {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
+  }
+  .section-sub {
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.75;
+  }
+
+  /* Feat grid */
+  .feat-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 768px) { .feat-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .feat-card {
+    background: rgba(8, 20, 50, 0.5);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    padding: 32px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+    cursor: default;
+  }
+  .feat-card:hover { transform: translateY(-10px); }
+  .feat-card--blue:hover  { border-color: rgba(59,130,246,0.35); box-shadow: 0 24px 60px rgba(37,99,235,0.2); }
+  .feat-card--cyan:hover  { border-color: rgba(6,182,212,0.35);  box-shadow: 0 24px 60px rgba(6,182,212,0.15); }
+  .feat-card--sky:hover   { border-color: rgba(56,189,248,0.35); box-shadow: 0 24px 60px rgba(56,189,248,0.15); }
+
+  .feat-emoji-wrap {
+    width: 60px; height: 60px;
+    border-radius: 18px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    transition: transform 0.3s;
+  }
+  .feat-card:hover .feat-emoji-wrap { transform: scale(1.12) rotate(-4deg); }
+  .feat-emoji-wrap--blue { background: rgba(37,99,235,0.15); border: 1px solid rgba(59,130,246,0.2); }
+  .feat-emoji-wrap--cyan { background: rgba(6,182,212,0.12);  border: 1px solid rgba(6,182,212,0.2);  }
+  .feat-emoji-wrap--sky  { background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.2); }
+
+  .feat-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 99px;
+    margin-bottom: 14px;
+  }
+  .feat-tag--blue { background: rgba(37,99,235,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.2); }
+  .feat-tag--cyan { background: rgba(6,182,212,0.12);  color: #67e8f9; border: 1px solid rgba(6,182,212,0.2); }
+  .feat-tag--sky  { background: rgba(56,189,248,0.12); color: #7dd3fc; border: 1px solid rgba(56,189,248,0.2); }
+
+  .feat-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  .feat-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+  .feat-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .feat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.65);
+  }
+  .feat-item--blue svg { color: #60a5fa; }
+  .feat-item--cyan svg { color: #22d3ee; }
+  .feat-item--sky  svg { color: #38bdf8; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0;
+    margin-top: 60px;
+    background: rgba(8, 20, 50, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(59,130,246,0.12);
+    border-radius: 24px;
+    padding: 36px 48px;
+  }
+  .stats-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 120px;
+  }
+  .stats-value { font-size: 36px; font-weight: 900; }
+  .stats-label { font-size: 13px; color: rgba(255,255,255,0.4); font-weight: 600; }
+  .stats-sep { width: 1px; height: 48px; background: rgba(255,255,255,0.06); }
+</style>

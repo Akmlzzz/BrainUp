@@ -1,0 +1,244 @@
+---
+---
+
+<footer id="footer">
+  <div class="footer-top-line"></div>
+  <div class="ft-bg">
+    <div class="ft-blob"></div>
+  </div>
+
+  <div class="ft-container">
+    <!-- Main grid -->
+    <div class="ft-grid">
+      <!-- Brand -->
+      <div class="ft-brand">
+        <a href="/" class="ft-logo" aria-label="BrainUp">
+          <div class="ft-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26C17.81 13.47 19 11.38 19 9c0-3.87-3.13-7-7-7z" fill="white"/>
+              <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1z" fill="white" opacity="0.7"/>
+            </svg>
+          </div>
+          <span class="ft-logo-text">Brain<span class="gradient-text">Up</span></span>
+        </a>
+        <p class="ft-desc">Platform e-quiz interaktif untuk belajar lebih cerdas, kapan saja dan di mana saja.</p>
+        <div class="ft-socials">
+          {[
+            { name:'Twitter/X', href:'#', icon:`<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.543l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>` },
+            { name:'Instagram', href:'#', icon:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>` },
+            { name:'LinkedIn',  href:'#', icon:`<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>` },
+            { name:'YouTube',   href:'#', icon:`<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-1.96C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/></svg>` },
+          ].map(s => (
+            <a href={s.href} aria-label={s.name} class="ft-social">
+              <Fragment set:html={s.icon} />
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="ft-col">
+        <h4 class="ft-col-title">Produk</h4>
+        <ul class="ft-links">
+          {[['Fitur Unggulan','#fitur'],['Cara Kerja','#cara-kerja'],['Paket Harga','#harga'],['Changelog','/changelog']].map(([l,h]) => (
+            <li><a href={h} class="ft-link">{l}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h4 class="ft-col-title">Belajar</h4>
+        <ul class="ft-links">
+          {[['Semua Modul','/modules'],['Kuis Terbaru','/quizzes'],['Leaderboard','/leaderboard'],['Sertifikat','/certificates']].map(([l,h]) => (
+            <li><a href={h} class="ft-link">{l}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h4 class="ft-col-title">Perusahaan</h4>
+        <ul class="ft-links">
+          {[['Tentang Kami','/about'],['Blog','/blog'],['Karir','/career'],['Kontak','mailto:hello@brainup.id']].map(([l,h]) => (
+            <li><a href={h} class="ft-link">{l}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Newsletter -->
+    <div class="ft-newsletter">
+      <div class="ft-nl-text">
+        <h4 class="ft-nl-title">Dapatkan tips belajar gratis tiap minggu 📩</h4>
+        <p class="ft-nl-sub">Ikuti newsletter kami. Berhenti berlangganan kapan saja.</p>
+      </div>
+      <form class="ft-nl-form" onsubmit="event.preventDefault()">
+        <input type="email" id="newsletter-email" placeholder="emailkamu@gmail.com" class="ft-nl-input" />
+        <button type="submit" id="newsletter-submit" class="ft-nl-btn">Langganan</button>
+      </form>
+    </div>
+
+    <!-- Bottom bar -->
+    <div class="ft-bottom">
+      <p class="ft-copy">© 2026 BrainUp. Hak cipta dilindungi undang-undang.</p>
+      <div class="ft-legal">
+        <a href="/privacy" class="ft-legal-link">Kebijakan Privasi</a>
+        <a href="/terms"   class="ft-legal-link">Syarat & Ketentuan</a>
+        <a href="/cookies" class="ft-legal-link">Cookie</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  #footer {
+    position: relative;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 80px;
+    padding-bottom: 36px;
+    overflow: hidden;
+  }
+  .footer-top-line {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(59,130,246,0.5), transparent);
+  }
+  .ft-bg { position: absolute; inset: 0; pointer-events: none; }
+  .ft-blob {
+    position: absolute;
+    width: 500px; height: 400px;
+    bottom: -100px; left: -80px;
+    border-radius: 50%;
+    filter: blur(130px);
+    background: radial-gradient(circle, rgba(29,78,216,0.1) 0%, transparent 70%);
+  }
+
+  .ft-container { max-width: 1280px; margin: 0 auto; padding: 0 32px; position: relative; z-index: 1; }
+
+  /* Main grid */
+  .ft-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px 32px;
+    margin-bottom: 56px;
+  }
+  @media (min-width: 768px) { .ft-grid { grid-template-columns: 2fr 1fr 1fr 1fr; } }
+
+  /* Brand */
+  .ft-brand {}
+  .ft-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    margin-bottom: 16px;
+  }
+  .ft-logo-icon {
+    width: 36px; height: 36px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 14px rgba(59,130,246,0.35);
+    transition: transform 0.3s;
+  }
+  .ft-logo:hover .ft-logo-icon { transform: scale(1.1) rotate(-4deg); }
+  .ft-logo-text { font-size: 20px; font-weight: 900; color: #fff; }
+  .ft-desc { font-size: 14px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 20px; }
+  .ft-socials { display: flex; gap: 10px; }
+  .ft-social {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: center;
+    color: rgba(255,255,255,0.35);
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+  .ft-social:hover {
+    background: rgba(37,99,235,0.12);
+    border-color: rgba(59,130,246,0.3);
+    color: #60a5fa;
+    transform: translateY(-2px);
+  }
+
+  /* Columns */
+  .ft-col {}
+  .ft-col-title {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 18px;
+  }
+  .ft-links { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .ft-link {
+    font-size: 14px;
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+  .ft-link:hover { color: #fff; transform: translateX(4px); }
+
+  /* Newsletter */
+  .ft-newsletter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 28px 32px;
+    background: rgba(8,20,50,0.55);
+    border: 1px solid rgba(59,130,246,0.1);
+    border-radius: 20px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(16px);
+  }
+  .ft-nl-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .ft-nl-sub   { font-size: 13px; color: rgba(255,255,255,0.35); }
+  .ft-nl-form  { display: flex; gap: 10px; width: 100%; max-width: 460px; }
+  .ft-nl-input {
+    flex: 1;
+    padding: 11px 16px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #fff;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .ft-nl-input::placeholder { color: rgba(255,255,255,0.2); }
+  .ft-nl-input:focus { border-color: rgba(59,130,246,0.4); background: rgba(37,99,235,0.05); }
+  .ft-nl-btn {
+    padding: 11px 22px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    transition: all 0.25s;
+  }
+  .ft-nl-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(37,99,235,0.5); filter: brightness(1.1); }
+
+  /* Bottom */
+  .ft-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .ft-copy { font-size: 12px; color: rgba(255,255,255,0.2); }
+  .ft-legal { display: flex; gap: 24px; }
+  .ft-legal-link { font-size: 12px; color: rgba(255,255,255,0.2); text-decoration: none; transition: color 0.2s; }
+  .ft-legal-link:hover { color: rgba(255,255,255,0.55); }
+</style>

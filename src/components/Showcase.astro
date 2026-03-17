@@ -1,0 +1,367 @@
+---
+---
+
+<section id="cara-kerja">
+  <div class="sc-bg">
+    <div class="sc-blob sc-blob-1"></div>
+    <div class="sc-blob sc-blob-2"></div>
+  </div>
+
+  <div class="sc-container">
+    <div class="section-header">
+      <div class="section-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Cara Kerja
+      </div>
+      <h2 class="section-title">
+        Belajar Semudah<br/>
+        <span class="gradient-text">Menonton Video</span>
+      </h2>
+      <p class="section-sub">
+        Dari modul video hingga kuis interaktif, semua terintegrasi dalam alur belajar yang mulus dan menyenangkan.
+      </p>
+    </div>
+
+    <!-- Browser mockup -->
+    <div class="browser-wrap">
+      <div class="browser-glow"></div>
+      <div class="browser-frame">
+        <!-- Chrome bar -->
+        <div class="browser-chrome">
+          <div class="browser-dots">
+            <span class="dot dot-red"></span>
+            <span class="dot dot-yellow"></span>
+            <span class="dot dot-green"></span>
+          </div>
+          <div class="browser-url">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <span>app.brainup.id/modules/matematika</span>
+          </div>
+        </div>
+
+        <!-- Video area -->
+        <div class="video-area">
+          <!-- Left: slide content -->
+          <div class="slide-content">
+            <div class="slide-chapter">Matematika Dasar · Bab 3</div>
+            <div class="slide-title">Operasi Aljabar<br/>& Persamaan Linear</div>
+            <div class="slide-topics">
+              <div class="topic topic-done">
+                <span class="topic-num topic-done-num">1</span>
+                <span class="topic-text topic-done-text">Variabel dan Konstanta</span>
+              </div>
+              <div class="topic topic-active">
+                <span class="topic-num topic-active-num">2</span>
+                <span class="topic-text topic-active-text">Persamaan Linear Satu Variabel</span>
+              </div>
+              <div class="topic topic-future">
+                <span class="topic-num topic-future-num">3</span>
+                <span class="topic-text topic-future-text">Sistem Persamaan</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: playlist -->
+          <div class="playlist">
+            <div class="playlist-title">Playlist Modul</div>
+            {[
+              { n:'01', t:'Pengenalan Aljabar',  done:true,  active:false },
+              { n:'02', t:'Operasi Bilangan',     done:true,  active:false },
+              { n:'03', t:'Persamaan Linear',     done:false, active:true  },
+              { n:'04', t:'Grafik Fungsi',        done:false, active:false },
+            ].map(item => (
+              <div class={`pl-item ${item.active ? 'pl-item--active' : ''}`}>
+                <span class={`pl-num ${item.active ? 'pl-num--active' : item.done ? 'pl-num--done' : 'pl-num--future'}`}>{item.n}</span>
+                <span class={`pl-text ${item.active ? 'pl-text--active' : item.done ? 'pl-text--done' : 'pl-text--future'}`}>{item.t}</span>
+                {item.done && (
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="3" style="flex-shrink:0;">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <!-- Play button overlay -->
+          <div class="play-overlay">
+            <div class="play-btn animate-pulse-glow">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="video-controls">
+            <div class="progress-track" style="margin-bottom:10px;">
+              <div class="progress-fill" style="width:40%;"></div>
+            </div>
+            <div class="ctrl-row">
+              <div class="ctrl-left">
+                <button aria-label="pause" style="background:none;border:none;color:rgba(255,255,255,0.55);cursor:pointer;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                </button>
+                <span style="font-size:11px;color:rgba(255,255,255,0.4);font-weight:600;">12:34 / 28:00</span>
+              </div>
+              <button aria-label="fullscreen" style="background:none;border:none;color:rgba(255,255,255,0.4);cursor:pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz prompt -->
+        <div class="quiz-prompt">
+          <div class="qp-info">
+            <div class="qp-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:#fff;">Kuis tersedia setelah modul ini!</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.35);">8 Soal · Estimasi 10 menit</div>
+            </div>
+          </div>
+          <a href="/register" id="showcase-quiz-btn" class="qp-btn">Mulai Kuis →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps-grid">
+      {[
+        { step:'01', icon:'📚', title:'Pilih Modul',    desc:'Jelajahi ratusan modul yang terstruktur dari level dasar hingga mahir.' },
+        { step:'02', icon:'🎬', title:'Tonton Video',   desc:'Belajar dari instruktur ahli melalui video berkualitas tinggi kapan saja.' },
+        { step:'03', icon:'🏆', title:'Kerjakan Kuis', desc:'Uji pemahamanmu dan raih sertifikat kelulusan resmi dari BrainUp.' },
+      ].map(s => (
+        <div class="step-card">
+          <div class="step-emoji">{s.icon}</div>
+          <div>
+            <div class="step-num">Langkah {s.step}</div>
+            <div class="step-title">{s.title}</div>
+            <div class="step-desc">{s.desc}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  #cara-kerja {
+    position: relative;
+    padding: 100px 32px;
+    overflow: hidden;
+  }
+  .sc-bg { position: absolute; inset: 0; pointer-events: none; }
+  .sc-blob { position: absolute; border-radius: 50%; filter: blur(130px); }
+  .sc-blob-1 { width: 500px; height: 500px; bottom: 0; left: 20%; background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%); }
+  .sc-blob-2 { width: 400px; height: 400px; top: 0; right: 15%; background: radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%); }
+
+  .sc-container { max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* Browser mockup */
+  .browser-wrap { position: relative; max-width: 900px; margin: 0 auto; }
+  .browser-glow {
+    position: absolute;
+    inset: -4px;
+    border-radius: 28px;
+    background: linear-gradient(135deg, rgba(37,99,235,0.35), rgba(6,182,212,0.25));
+    filter: blur(8px);
+    z-index: 0;
+  }
+  .browser-frame {
+    position: relative;
+    z-index: 1;
+    background: rgba(8,20,50,0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(59,130,246,0.18);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+  }
+
+  .browser-chrome {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .browser-dots { display: flex; gap: 6px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; }
+  .dot-red    { background: rgba(248,113,113,0.6); }
+  .dot-yellow { background: rgba(250,204,21,0.6);  }
+  .dot-green  { background: rgba(74,222,128,0.6);  }
+  .browser-url {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 11px;
+    color: rgba(255,255,255,0.28);
+    font-weight: 500;
+  }
+
+  /* Video area */
+  .video-area {
+    position: relative;
+    min-height: 320px;
+    background: linear-gradient(135deg, #060c1a, #0a1530);
+    display: flex;
+    overflow: hidden;
+  }
+  .slide-content {
+    flex: 1;
+    padding: 36px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .slide-chapter { font-size: 11px; font-weight: 700; color: #60a5fa; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 14px; }
+  .slide-title { font-size: clamp(18px, 2.5vw, 28px); font-weight: 900; color: #fff; line-height: 1.25; margin-bottom: 24px; }
+  .slide-topics { display: flex; flex-direction: column; gap: 12px; }
+  .topic { display: flex; align-items: center; gap: 12px; }
+  .topic-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .topic-done-num  { background: rgba(37,99,235,0.2); border: 1px solid rgba(59,130,246,0.3); color: #93c5fd; }
+  .topic-active-num{ background: rgba(37,99,235,0.6); border: 1px solid #3b82f6; color: #fff; }
+  .topic-future-num{ background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.2); }
+  .topic-done-text  { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: line-through; }
+  .topic-active-text{ font-size: 13px; font-weight: 700; color: #fff; }
+  .topic-future-text{ font-size: 13px; color: rgba(255,255,255,0.2); }
+
+  .playlist {
+    width: 180px;
+    flex-shrink: 0;
+    background: rgba(4,13,30,0.6);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    padding: 16px 12px;
+    overflow: auto;
+    display: none; /* hidden on mobile */
+  }
+  @media (min-width: 640px) { .playlist { display: block; } }
+  .playlist-title { font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+  .pl-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 9px; margin-bottom: 4px; transition: background 0.2s; }
+  .pl-item--active { background: rgba(37,99,235,0.15); border: 1px solid rgba(59,130,246,0.25); }
+  .pl-num { font-size: 10px; font-weight: 800; flex-shrink: 0; }
+  .pl-num--active { color: #60a5fa; }
+  .pl-num--done   { color: rgba(255,255,255,0.25); }
+  .pl-num--future { color: rgba(255,255,255,0.15); }
+  .pl-text { font-size: 10px; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pl-text--active { color: #fff; font-weight: 700; }
+  .pl-text--done   { color: rgba(255,255,255,0.35); text-decoration: line-through; }
+  .pl-text--future { color: rgba(255,255,255,0.2); }
+
+  .play-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .play-btn {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    background: rgba(37,99,235,0.35);
+    backdrop-filter: blur(8px);
+    border: 2px solid rgba(59,130,246,0.5);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 0 12px rgba(37,99,235,0.1), 0 8px 30px rgba(37,99,235,0.4);
+  }
+
+  .video-controls {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    padding: 24px 20px 14px;
+  }
+  .ctrl-row { display: flex; align-items: center; justify-content: space-between; }
+  .ctrl-left { display: flex; align-items: center; gap: 12px; }
+
+  /* Progress bar (shared with hero, redefine here too) */
+  .progress-track {
+    height: 4px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 10px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    border-radius: 99px;
+  }
+
+  /* Quiz prompt */
+  .quiz-prompt {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px 28px;
+    background: rgba(8,20,50,0.4);
+    border-top: 1px solid rgba(255,255,255,0.04);
+  }
+  .qp-info { display: flex; align-items: center; gap: 12px; }
+  .qp-icon {
+    width: 40px; height: 40px;
+    border-radius: 12px;
+    background: rgba(37,99,235,0.15);
+    border: 1px solid rgba(59,130,246,0.25);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .qp-btn {
+    padding: 10px 24px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.35);
+    transition: all 0.25s;
+    white-space: nowrap;
+  }
+  .qp-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(37,99,235,0.5); filter: brightness(1.1); }
+
+  /* Steps */
+  .steps-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 56px;
+  }
+  @media (min-width: 768px) { .steps-grid { grid-template-columns: repeat(3, 1fr); } }
+  .step-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    background: rgba(8,20,50,0.5);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 20px;
+    padding: 24px;
+    transition: all 0.3s;
+  }
+  .step-card:hover { border-color: rgba(59,130,246,0.2); transform: translateY(-4px); box-shadow: 0 16px 40px rgba(37,99,235,0.15); }
+  .step-emoji { font-size: 30px; flex-shrink: 0; transition: transform 0.3s; }
+  .step-card:hover .step-emoji { transform: scale(1.15) rotate(-6deg); }
+  .step-num  { font-size: 10px; font-weight: 800; color: #60a5fa; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .step-title{ font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+  .step-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+</style>

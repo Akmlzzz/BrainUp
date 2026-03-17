@@ -1,0 +1,333 @@
+---
+const plans = [
+  {
+    id: 'free',
+    name: 'Free',
+    tagline: 'Cocok untuk memulai',
+    price: 'Rp0',
+    period: '/ selamanya',
+    highlight: false,
+    ctaLabel: 'Mulai Gratis',
+    badge: null as string | null,
+    checkColor: '#4ade80',
+    features: [
+      { text: '5 modul gratis',             ok: true  },
+      { text: '10 kuis per bulan',           ok: true  },
+      { text: 'Lacak progres dasar',         ok: true  },
+      { text: 'Sertifikat kelulusan',        ok: false },
+      { text: 'Download video offline',      ok: false },
+      { text: 'Akses semua modul',           ok: false },
+      { text: 'Laporan analitik lanjutan',   ok: false },
+    ],
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    tagline: 'Untuk belajar serius',
+    price: 'Rp79.000',
+    period: '/ bulan',
+    highlight: true,
+    ctaLabel: 'Mulai Pro',
+    badge: 'Terpopuler' as string | null,
+    checkColor: '#60a5fa',
+    features: [
+      { text: 'Semua modul (500+)',           ok: true  },
+      { text: 'Kuis tak terbatas',            ok: true  },
+      { text: 'Lacak progres lanjutan',       ok: true  },
+      { text: 'Sertifikat kelulusan',         ok: true  },
+      { text: 'Download video offline',       ok: true  },
+      { text: 'Laporan analitik AI',          ok: true  },
+      { text: 'Dukungan prioritas',           ok: false },
+    ],
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
+    tagline: 'Untuk tim & institusi',
+    price: 'Rp299.000',
+    period: '/ bulan',
+    highlight: false,
+    ctaLabel: 'Hubungi Sales',
+    badge: null as string | null,
+    checkColor: '#22d3ee',
+    features: [
+      { text: 'Semua fitur Pro',             ok: true },
+      { text: 'Multi-user (s.d. 50 akun)',   ok: true },
+      { text: 'Dashboard tim & admin',        ok: true },
+      { text: 'Kuis & modul kustom',          ok: true },
+      { text: 'Integrasi SSO/LDAP',           ok: true },
+      { text: 'Laporan & export data',        ok: true },
+      { text: 'Dedicated account manager',   ok: true },
+    ],
+  },
+];
+---
+
+<section id="harga">
+  <div class="pr-bg">
+    <div class="pr-blob pr-blob-1"></div>
+  </div>
+
+  <div class="pr-container">
+    <div class="section-header">
+      <div class="section-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        Paket Harga
+      </div>
+      <h2 class="section-title">
+        Pilih Paket yang<br/>
+        <span class="gradient-text">Sesuai Kebutuhanmu</span>
+      </h2>
+      <p class="section-sub">
+        Mulai gratis dan upgrade kapan saja. Tanpa biaya tersembunyi, tanpa kontrak panjang.
+      </p>
+      <!-- Billing toggle -->
+      <div class="billing-toggle">
+        <button id="billing-monthly" class="toggle-btn toggle-btn--active">Bulanan</button>
+        <button id="billing-yearly" class="toggle-btn">
+          Tahunan <span class="toggle-save">-20%</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="pricing-grid">
+      {plans.map((plan, idx) => (
+        <div class={`pricing-card ${plan.highlight ? 'pricing-card--highlight' : ''}`}
+          style={idx === 1 ? 'margin-top:-16px;margin-bottom:-16px;' : ''}>
+
+          {plan.badge && (
+            <div class="pricing-badge">{plan.badge}</div>
+          )}
+
+          <div class={`pricing-inner ${plan.badge ? 'pricing-inner--badge' : ''}`}>
+            <div class="pr-name-row">
+              <div class={`pr-name ${plan.highlight ? 'gradient-text' : plan.id === 'enterprise' ? 'pr-name--cyan' : 'pr-name--default'}`}>
+                {plan.name}
+              </div>
+              <div class="pr-tagline">{plan.tagline}</div>
+            </div>
+
+            <div class="pr-price-row">
+              <span class={`pr-price ${plan.highlight ? 'gradient-text' : plan.id === 'enterprise' ? 'pr-price--cyan' : ''}`}>
+                {plan.price}
+              </span>
+              <span class="pr-period">{plan.period}</span>
+            </div>
+
+            <a href="/register" id={`pricing-cta-${plan.id}`}
+              class={`pr-cta ${plan.highlight ? 'pr-cta--highlight' : plan.id === 'enterprise' ? 'pr-cta--cyan' : 'pr-cta--ghost'}`}>
+              {plan.ctaLabel}
+            </a>
+
+            <div class="pr-divider"></div>
+
+            <ul class="pr-features">
+              {plan.features.map(f => (
+                <li class="pr-feature">
+                  {f.ok ? (
+                    <span class="pr-check pr-check--ok" style={`color:${plan.checkColor}`}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    </span>
+                  ) : (
+                    <span class="pr-check pr-check--no">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </span>
+                  )}
+                  <span class={f.ok ? 'pr-feat-text' : 'pr-feat-text pr-feat-text--no'}>{f.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="pr-note">
+      Semua paket <strong>garansi uang kembali 7 hari</strong>. Butuh kustom?{' '}
+      <a href="mailto:hello@brainup.id">Hubungi kami</a>.
+    </div>
+  </div>
+</section>
+
+<style>
+  #harga {
+    position: relative;
+    padding: 100px 32px;
+    overflow: hidden;
+  }
+  .pr-bg { position: absolute; inset: 0; pointer-events: none; }
+  .pr-blob { position: absolute; border-radius: 50%; filter: blur(160px); }
+  .pr-blob-1 {
+    width: 700px; height: 700px;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    background: radial-gradient(circle, rgba(29,78,216,0.12) 0%, transparent 70%);
+  }
+  .pr-container { max-width: 1280px; margin: 0 auto; position: relative; z-index: 1; }
+
+  /* Toggle */
+  .billing-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: rgba(8,20,50,0.7);
+    border: 1px solid rgba(255,255,255,0.07);
+    padding: 5px;
+    border-radius: 99px;
+    margin-top: 28px;
+  }
+  .toggle-btn {
+    padding: 9px 22px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    color: rgba(255,255,255,0.45);
+    background: transparent;
+    transition: all 0.25s;
+  }
+  .toggle-btn--active {
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+  }
+  .toggle-save {
+    font-size: 10px;
+    font-weight: 800;
+    color: #4ade80;
+    background: rgba(74,222,128,0.1);
+    padding: 2px 7px;
+    border-radius: 99px;
+    margin-left: 6px;
+  }
+
+  /* Grid */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+  @media (min-width: 768px) { .pricing-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .pricing-card {
+    position: relative;
+    background: rgba(8,20,50,0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 24px;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+  }
+  .pricing-card:hover { transform: translateY(-10px); box-shadow: 0 24px 60px rgba(0,0,0,0.4); }
+  .pricing-card--highlight {
+    border-color: rgba(59,130,246,0.35);
+    box-shadow: 0 0 0 1px rgba(59,130,246,0.1), 0 20px 60px rgba(37,99,235,0.2);
+  }
+  .pricing-card--highlight:hover { box-shadow: 0 30px 80px rgba(37,99,235,0.3); }
+
+  .pricing-badge {
+    position: absolute;
+    top: -14px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 6px 18px;
+    border-radius: 99px;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.4);
+  }
+  .pricing-inner { padding: 28px; }
+  .pricing-inner--badge { padding-top: 36px; }
+
+  .pr-name-row { margin-bottom: 20px; }
+  .pr-name {
+    font-size: 13px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .pr-name--default { color: #60a5fa; }
+  .pr-name--cyan    { color: #22d3ee; }
+  .pr-tagline { font-size: 13px; color: rgba(255,255,255,0.35); }
+
+  .pr-price-row { display: flex; align-items: flex-end; gap: 6px; margin-bottom: 24px; }
+  .pr-price { font-size: 36px; font-weight: 900; color: #fff; line-height: 1; }
+  .pr-price--cyan { color: #67e8f9; }
+  .pr-period { font-size: 13px; color: rgba(255,255,255,0.3); margin-bottom: 3px; font-weight: 600; }
+
+  .pr-cta {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 13px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s;
+    margin-bottom: 24px;
+  }
+  .pr-cta--highlight {
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(37,99,235,0.4);
+  }
+  .pr-cta--highlight:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(37,99,235,0.6); filter: brightness(1.1); }
+  .pr-cta--ghost {
+    border: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.03);
+  }
+  .pr-cta--ghost:hover { border-color: rgba(59,130,246,0.35); background: rgba(37,99,235,0.08); color: #fff; }
+  .pr-cta--cyan {
+    border: 1px solid rgba(34,211,238,0.25);
+    color: #67e8f9;
+    background: rgba(6,182,212,0.05);
+  }
+  .pr-cta--cyan:hover { border-color: rgba(34,211,238,0.5); background: rgba(6,182,212,0.1); }
+
+  .pr-divider { height: 1px; background: rgba(255,255,255,0.05); margin-bottom: 20px; }
+
+  .pr-features { list-style: none; display: flex; flex-direction: column; gap: 11px; }
+  .pr-feature { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+  .pr-check {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pr-check--ok  { background: rgba(255,255,255,0.06); }
+  .pr-check--no  { background: rgba(255,255,255,0.03); }
+  .pr-feat-text  { color: rgba(255,255,255,0.75); }
+  .pr-feat-text--no { color: rgba(255,255,255,0.2); text-decoration: line-through; }
+
+  .pr-note {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.3);
+  }
+  .pr-note strong { color: rgba(255,255,255,0.55); }
+  .pr-note a { color: #60a5fa; text-decoration: underline; text-underline-offset: 3px; }
+  .pr-note a:hover { color: #93c5fd; }
+</style>
+
+<script>
+  const monthly = document.getElementById('billing-monthly')!;
+  const yearly  = document.getElementById('billing-yearly')!;
+  monthly.addEventListener('click', () => {
+    monthly.className = 'toggle-btn toggle-btn--active';
+    yearly.className  = 'toggle-btn';
+  });
+  yearly.addEventListener('click', () => {
+    yearly.className  = 'toggle-btn toggle-btn--active';
+    monthly.className = 'toggle-btn';
+  });
+</script>

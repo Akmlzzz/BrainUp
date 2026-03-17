@@ -1,0 +1,234 @@
+---
+---
+
+<header id="main-header">
+  <div class="header-inner">
+    <!-- Logo -->
+    <a href="/" class="logo" aria-label="BrainUp">
+      <div class="logo-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26C17.81 13.47 19 11.38 19 9c0-3.87-3.13-7-7-7z" fill="white"/>
+          <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1z" fill="white" opacity="0.7"/>
+        </svg>
+      </div>
+      <span class="logo-text">Brain<span class="gradient-text">Up</span></span>
+    </a>
+
+    <!-- Desktop Nav -->
+    <nav class="desktop-nav" aria-label="Main navigation">
+      <a href="#fitur" class="nav-link">Fitur</a>
+      <a href="#cara-kerja" class="nav-link">Cara Kerja</a>
+      <a href="#harga" class="nav-link">Harga</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+    </nav>
+
+    <!-- CTA Buttons -->
+    <div class="header-cta">
+      <a href="/login" id="header-login-btn" class="btn-ghost">Masuk</a>
+      <a href="/register" id="header-cta-btn" class="btn-primary">Daftar Gratis</a>
+    </div>
+
+    <!-- Mobile toggle -->
+    <button id="mobile-menu-btn" class="mobile-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <svg id="icon-menu" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+      <svg id="icon-close" class="hidden" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="mobile-menu hidden">
+    <a href="#fitur"      class="mobile-link" onclick="closeMobileMenu()">Fitur</a>
+    <a href="#cara-kerja" class="mobile-link" onclick="closeMobileMenu()">Cara Kerja</a>
+    <a href="#harga"      class="mobile-link" onclick="closeMobileMenu()">Harga</a>
+    <a href="#faq"        class="mobile-link" onclick="closeMobileMenu()">FAQ</a>
+    <div style="display:flex;gap:12px;padding:8px 0;">
+      <a href="/login"    class="btn-ghost" style="flex:1;text-align:center;">Masuk</a>
+      <a href="/register" class="btn-primary" style="flex:1;text-align:center;">Daftar Gratis</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  /* ── Header ── */
+  #main-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    transition: background 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
+  }
+  #main-header.scrolled {
+    background: rgba(4, 13, 30, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.12);
+    box-shadow: 0 4px 32px rgba(0,0,0,0.4);
+  }
+  .header-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  /* Logo */
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .logo-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .logo:hover .logo-icon {
+    transform: scale(1.1) rotate(-3deg);
+    box-shadow: 0 6px 24px rgba(59, 130, 246, 0.6);
+  }
+  .logo-text {
+    font-size: 20px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.5px;
+  }
+
+  /* Nav links */
+  .desktop-nav {
+    display: none;
+    align-items: center;
+    gap: 36px;
+  }
+  @media (min-width: 768px) { .desktop-nav { display: flex; } }
+  .nav-link {
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.2s;
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0;
+    width: 0; height: 2px;
+    background: linear-gradient(90deg, #3b82f6, #06b6d4);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+  .nav-link:hover { color: #fff; }
+  .nav-link:hover::after { width: 100%; }
+
+  /* CTA Buttons */
+  .header-cta {
+    display: none;
+    align-items: center;
+    gap: 12px;
+  }
+  @media (min-width: 768px) { .header-cta { display: flex; } }
+  .btn-ghost {
+    padding: 9px 18px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+    border: 1px solid rgba(255,255,255,0.08);
+  }
+  .btn-ghost:hover {
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+  }
+  .btn-primary {
+    padding: 10px 22px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    white-space: nowrap;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(37, 99, 235, 0.55);
+    filter: brightness(1.1);
+  }
+
+  /* Mobile toggle */
+  .mobile-toggle {
+    display: flex;
+    border: none;
+    background: none;
+    color: rgba(255,255,255,0.7);
+    cursor: pointer;
+    padding: 4px;
+  }
+  @media (min-width: 768px) { .mobile-toggle { display: none; } }
+
+  /* Mobile menu */
+  .mobile-menu {
+    padding: 8px 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: rgba(4, 13, 30, 0.95);
+    border-top: 1px solid rgba(59,130,246,0.1);
+    backdrop-filter: blur(24px);
+  }
+  .mobile-menu.hidden { display: none; }
+  .mobile-link {
+    color: rgba(255,255,255,0.65);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-radius: 10px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .mobile-link:hover { background: rgba(59,130,246,0.08); color: #fff; }
+</style>
+
+<script>
+  const header     = document.getElementById('main-header')!;
+  const mobileBtn  = document.getElementById('mobile-menu-btn')!;
+  const mobileMenu = document.getElementById('mobile-menu')!;
+  const iconMenu   = document.getElementById('icon-menu')!;
+  const iconClose  = document.getElementById('icon-close')!;
+
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  mobileBtn.addEventListener('click', () => {
+    const isOpen = !mobileMenu.classList.contains('hidden');
+    mobileMenu.classList.toggle('hidden', isOpen);
+    iconMenu.classList.toggle('hidden', !isOpen);
+    iconClose.classList.toggle('hidden', isOpen);
+    mobileBtn.setAttribute('aria-expanded', String(!isOpen));
+  });
+
+  (window as any).closeMobileMenu = () => {
+    mobileMenu.classList.add('hidden');
+    iconMenu.classList.remove('hidden');
+    iconClose.classList.add('hidden');
+  };
+</script>

@@ -4,26 +4,35 @@ interface Props {
   activePage?: string;
   role?: 'admin' | 'learner';
 }
-
 const { title = 'Dashboard', activePage = 'dashboard', role = 'learner' } = Astro.props;
 
 const learnerNav = [
-  { id: 'dashboard', label: 'Dashboard',   href: '/dashboard',  icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>` },
-  { id: 'modules',   label: 'Modul Belajar', href: '/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>` },
-  { id: 'quiz',      label: 'Kuis Saya',    href: '/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 0 0 2.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 0 0-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25ZM6.75 12h.008v.008H6.75V12Zm0 3h.008v.008H6.75V15Zm0 3h.008v.008H6.75V18Z"/></svg>` },
-  { id: 'profile',   label: 'Profil',       href: '/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>` },
+  { id: 'dashboard', label: 'Dashboard',    href: '/dashboard' },
+  { id: 'modules',  label: 'Modul Belajar', href: '/dashboard' },
+  { id: 'quiz',     label: 'Kuis Saya',     href: '/dashboard' },
+  { id: 'profile',  label: 'Profil Saya',   href: '/dashboard' },
+];
+const adminNav = [
+  { id: 'dashboard', label: 'Dashboard',   href: '/admin/dashboard' },
+  { id: 'modules',  label: 'Kelola Modul', href: '/admin/dashboard' },
+  { id: 'users',    label: 'Pengguna',     href: '/admin/dashboard' },
+  { id: 'analytics',label: 'Analitik',     href: '/admin/dashboard' },
+  { id: 'settings', label: 'Pengaturan',   href: '/admin/dashboard' },
 ];
 
-const adminNav = [
-  { id: 'dashboard', label: 'Dashboard',   href: '/admin/dashboard',  icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>` },
-  { id: 'modules',   label: 'Kelola Modul', href: '/admin/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25"/></svg>` },
-  { id: 'users',     label: 'Pengguna',    href: '/admin/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"/></svg>` },
-  { id: 'settings',  label: 'Pengaturan',  href: '/admin/dashboard', icon: `<svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>` },
-];
+// SVG icons as inline strings — explicit w/h attributes to prevent Tailwind override
+const icons: Record<string, string> = {
+  dashboard: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`,
+  modules:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
+  quiz:      `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+  profile:   `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  users:     `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>`,
+  analytics: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+  settings:  `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>`,
+};
 
 const navItems = role === 'admin' ? adminNav : learnerNav;
 ---
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -32,258 +41,372 @@ const navItems = role === 'admin' ? adminNav : learnerNav;
   <title>{title} — BrainUp</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet"/>
   <style>
+    /* === RESET === */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; }
+
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Montserrat', system-ui, sans-serif;
       background: #040d1e;
-      color: #fff;
+      color: #e2efff;
       display: flex;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
     }
-    ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: #040d1e; }
-    ::-webkit-scrollbar-thumb { background: #1d4ed8; border-radius: 99px; }
 
-    /* ── Sidebar ── */
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(59,130,246,0.35); border-radius: 99px; }
+
+    /* ══════════════════════════════════════════
+       SIDEBAR  —  matches reference image style
+    ══════════════════════════════════════════ */
     .sidebar {
-      width: 280px;
+      width: 260px;
       flex-shrink: 0;
-      background: #020617;
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      background: #06111f;
+      border-right: 1px solid rgba(59,130,246,0.10);
       display: flex;
       flex-direction: column;
       position: fixed;
-      left: 0; top: 0; bottom: 0;
-      z-index: 100;
+      inset-block: 0;
+      left: 0;
+      z-index: 200;
     }
-    .sidebar-logo {
-      display: flex;
-      align-items: center;
-      padding: 32px 24px;
-      text-decoration: none;
-    }
-    .sidebar-logo img {
-      height: 32px;
-      width: auto;
-    }
-    .sidebar-role-badge {
-      margin: 0 24px 24px;
-      padding: 6px 12px;
-      border-radius: 99px;
-      background: rgba(37, 99, 235, 0.1);
-      border: 1px solid rgba(59, 130, 246, 0.2);
-      font-size: 10px;
-      font-weight: 700;
-      color: #60a5fa;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      text-align: center;
-      width: fit-content;
-    }
-    .sidebar-nav {
-      flex: 1;
-      padding: 0 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      overflow-y: auto;
-    }
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
-      color: #94a3b8;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .nav-item svg { 
-      width: 20px; 
-      height: 20px; 
-      flex-shrink: 0;
-      transition: transform 0.2s;
-    }
-    .nav-item:hover { 
-      background: rgba(255, 255, 255, 0.03); 
-      color: #f8fafc; 
-    }
-    .nav-item:hover svg {
-      transform: translateX(2px);
-    }
-    .nav-item.active {
-      background: linear-gradient(90deg, rgba(37, 99, 235, 0.15) 0%, transparent 100%);
-      color: #fff;
-      position: relative;
-    }
-    .nav-item.active::before {
+
+    /* Subtle glow top-left */
+    .sidebar::after {
       content: '';
       position: absolute;
-      left: 0;
-      top: 15%;
-      bottom: 15%;
-      width: 3px;
-      background: #3b82f6;
-      border-radius: 0 4px 4px 0;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+      top: -60px; left: -60px;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(29,78,216,0.14) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .nav-item.active svg { color: #3b82f6; }
 
-    .sidebar-bottom {
-      padding: 24px 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .sidebar-user {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 12px;
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.03);
-    }
-    .user-avatar {
-      width: 40px; height: 40px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #1e40af, #3b82f6);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      font-weight: 700;
-      color: #fff;
-      flex-shrink: 0;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    .user-name { font-size: 14px; font-weight: 600; color: #f8fafc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .user-email { font-size: 12px; color: #64748b; margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    
-    .btn-logout {
+    /* ── Logo ── */
+    .sb-logo {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 12px 16px;
-      border-radius: 12px;
-      background: transparent;
-      border: 1px solid rgba(239, 68, 68, 0.1);
-      color: #ef4444;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      font-family: inherit;
-      width: 100%;
-      transition: all 0.2s;
+      padding: 24px 20px 18px;
+      text-decoration: none;
     }
-    .btn-logout:hover { 
-      background: rgba(239, 68, 68, 0.05); 
-      border-color: rgba(239, 68, 68, 0.3); 
-      transform: translateY(-1px);
+    .sb-logo-icon {
+      width: 34px; height: 34px;
+      border-radius: 9px;
+      background: linear-gradient(135deg, #1d4ed8 0%, #06b6d4 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+      box-shadow: 0 4px 14px rgba(29,78,216,0.40);
     }
-    .btn-logout svg { width: 18px; height: 18px; }
+    .sb-logo-name {
+      font-size: 18px; font-weight: 900; color: #fff; letter-spacing: -0.4px;
+    }
+    .sb-logo-name em {
+      font-style: normal;
+      background: linear-gradient(90deg, #60a5fa, #22d3ee);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
 
-    /* ── Main content ── */
+    /* ── Role badge ── */
+    .sb-role {
+      margin: 0 16px 6px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      display: flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+    }
+    .sb-role.admin  { background: rgba(239,68,68,0.07);  border: 1px solid rgba(239,68,68,0.16);  color: #fca5a5; }
+    .sb-role.learner{ background: rgba(29,78,216,0.10); border: 1px solid rgba(59,130,246,0.20); color: #93c5fd; }
+    .sb-role-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .admin   .sb-role-dot { background: #ef4444; box-shadow: 0 0 5px #ef4444; animation: blink 2s infinite; }
+    .learner .sb-role-dot { background: #3b82f6; box-shadow: 0 0 5px #3b82f6; animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+    /* ── Section label ── */
+    .sb-nav-label {
+      padding: 16px 20px 8px;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.2px;
+      color: rgba(255,255,255,0.18);
+    }
+
+    /* ── Nav ── */
+    .sb-nav {
+      flex: 1;
+      padding: 0 12px;
+      display: flex; flex-direction: column;
+      gap: 1px;
+      overflow-y: auto;
+    }
+    .sb-nav a {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-size: 13.5px; font-weight: 500;
+      color: rgba(255,255,255,0.42);
+      transition: background 0.15s, color 0.15s;
+      position: relative;
+      white-space: nowrap;
+      /* Force icon size via inherited rule */
+    }
+    /* Force ALL svgs inside nav items to be exactly 18×18 */
+    .sb-nav a svg {
+      display: block;
+      width: 18px !important;
+      height: 18px !important;
+      min-width: 18px;
+      flex-shrink: 0;
+    }
+    .sb-nav a:hover {
+      background: rgba(59,130,246,0.07);
+      color: rgba(255,255,255,0.80);
+    }
+    /* ACTIVE — left accent bar + blue tint, exactly like reference image */
+    .sb-nav a.active {
+      background: linear-gradient(90deg, rgba(29,78,216,0.22) 0%, rgba(6,182,212,0.06) 100%);
+      color: #93c5fd;
+      font-weight: 700;
+    }
+    .sb-nav a.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; bottom: 20%;
+      width: 3px;
+      background: linear-gradient(180deg, #3b82f6 0%, #06b6d4 100%);
+      border-radius: 0 3px 3px 0;
+      box-shadow: 0 0 8px rgba(59,130,246,0.5);
+    }
+    .sb-nav a.active svg {
+      color: #60a5fa;
+    }
+
+    /* horizontal divider */
+    .sb-divider {
+      height: 1px;
+      background: rgba(59,130,246,0.08);
+      margin: 10px 16px;
+    }
+
+    /* ── Bottom ── */
+    .sb-bottom {
+      padding: 12px 12px 20px;
+    }
+
+    /* User card */
+    .sb-user {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(59,130,246,0.08);
+      margin-bottom: 8px;
+      cursor: default;
+      transition: background 0.15s;
+    }
+    .sb-user:hover { background: rgba(29,78,216,0.08); }
+    .sb-avatar {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg, #1e40af, #0e7490);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 800; color: #fff;
+      flex-shrink: 0;
+    }
+    .sb-user-info { overflow: hidden; flex: 1; min-width: 0; }
+    .sb-user-name  { font-size: 12.5px; font-weight: 700; color: #dbeafe; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .sb-user-role  { font-size: 10.5px; color: rgba(255,255,255,0.28); margin-top: 1px; }
+
+    /* Logout */
+    .sb-logout {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 12px; border-radius: 10px;
+      background: transparent;
+      border: 1px solid rgba(239,68,68,0.10);
+      color: rgba(252,165,165,0.60);
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: 'Montserrat', sans-serif;
+      width: 100%; transition: all 0.18s;
+    }
+    .sb-logout svg { width: 16px !important; height: 16px !important; flex-shrink: 0; }
+    .sb-logout:hover { background: rgba(239,68,68,0.07); border-color: rgba(239,68,68,0.22); color: #fca5a5; }
+
+    /* ══════════════════════════════════════════
+       TOPBAR + MAIN
+    ══════════════════════════════════════════ */
     .main {
       flex: 1;
       margin-left: 260px;
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       min-height: 100vh;
+      background: #040d1e;
     }
     .topbar {
-      position: sticky;
-      top: 0;
-      height: 64px;
-      background: rgba(4,13,30,0.9);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      backdrop-filter: blur(20px);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28px;
-      z-index: 50;
+      position: sticky; top: 0; height: 60px;
+      background: rgba(4,13,30,0.90);
+      border-bottom: 1px solid rgba(59,130,246,0.08);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px; z-index: 50;
     }
-    .topbar-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #fff;
+    .topbar-left { display: flex; align-items: center; gap: 8px; }
+    .topbar-bc   { font-size: 12px; color: rgba(255,255,255,0.24); }
+    .topbar-sep  { color: rgba(255,255,255,0.15); }
+    .topbar-pg   { font-size: 13px; font-weight: 700; color: #e0f0ff; }
+
+    .topbar-right { display: flex; align-items: center; gap: 10px; }
+    .tb-date {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 11.5px; color: rgba(255,255,255,0.30);
+      background: rgba(29,78,216,0.07);
+      border: 1px solid rgba(59,130,246,0.12);
+      padding: 5px 12px; border-radius: 8px;
     }
-    .page-content {
-      padding: 32px 28px;
-      flex: 1;
+    .tb-date svg { width: 13px; height: 13px; color: #60a5fa; flex-shrink: 0; }
+    .tb-btn {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: rgba(29,78,216,0.07);
+      border: 1px solid rgba(59,130,246,0.10);
+      display: flex; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.38); cursor: pointer; transition: all 0.18s;
+      position: relative;
+    }
+    .tb-btn svg { width: 16px; height: 16px; }
+    .tb-btn:hover { background: rgba(29,78,216,0.14); color: #93c5fd; border-color: rgba(59,130,246,0.25); }
+    .tb-notif-dot {
+      position: absolute; top: -3px; right: -3px;
+      width: 14px; height: 14px;
+      background: #ef4444; border-radius: 50%;
+      border: 2px solid #040d1e;
+      font-size: 7px; font-weight: 800; color: #fff;
+      display: flex; align-items: center; justify-content: center;
     }
 
-    /* ── Auth Guard ── */
+    .page-content { padding: 28px 28px; flex: 1; }
+
+    /* ══════════════════════════════════════════
+       AUTH LOADING
+    ══════════════════════════════════════════ */
     .auth-loading {
-      position: fixed;
-      inset: 0;
-      background: #040d1e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: fixed; inset: 0; background: #040d1e;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px;
       z-index: 9999;
     }
     .spinner {
-      width: 40px; height: 40px;
-      border-radius: 50%;
-      border: 3px solid rgba(59,130,246,0.15);
+      width: 38px; height: 38px; border-radius: 50%;
+      border: 3px solid rgba(29,78,216,0.15);
       border-top-color: #3b82f6;
-      animation: spin 0.8s linear infinite;
+      animation: spin .75s linear infinite;
     }
+    .auth-loading p { font-size: 12px; color: rgba(255,255,255,0.22); font-weight: 600; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); transition: transform 0.28s ease; }
+      .sidebar.open { transform: translateX(0); }
+      .main { margin-left: 0; }
+      .page-content { padding: 18px 14px; }
+      .topbar { padding: 0 14px; }
+    }
   </style>
 </head>
 <body data-role={role}>
-  <!-- Auth Loading overlay -->
+
+  <!-- Auth overlay -->
   <div class="auth-loading" id="auth-loading">
     <div class="spinner"></div>
+    <p>Memverifikasi sesi...</p>
   </div>
 
-  <!-- Sidebar -->
+  <!-- ══ SIDEBAR ══ -->
   <aside class="sidebar" id="sidebar">
-    <a href="/" class="sidebar-logo">
-      <img src="/logo-light.svg" alt="BrainUp" />
-    </a>
-    <div class="sidebar-role-badge" id="role-badge">{role === 'admin' ? '⚡ Admin Panel' : '🎓 Learner'}</div>
 
-    <nav class="sidebar-nav">
+    <!-- Logo -->
+    <a href="/" class="sb-logo">
+      <div class="sb-logo-icon">🧠</div>
+      <span class="sb-logo-name">Brain<em>Up</em></span>
+    </a>
+
+    <!-- Role badge -->
+    <div class={`sb-role ${role}`}>
+      <span class="sb-role-dot"></span>
+      {role === 'admin' ? '⚡ Admin Panel' : '🎓 Learner Mode'}
+    </div>
+
+    <!-- Nav label -->
+    <div class="sb-nav-label">Menu Utama</div>
+
+    <!-- Navigation -->
+    <nav class="sb-nav">
       {navItems.map(item => (
-        <a href={item.href} class={`nav-item ${activePage === item.id ? 'active' : ''}`}>
-          <Fragment set:html={item.icon} />
+        <a
+          href={item.href}
+          class={activePage === item.id ? 'active' : ''}
+        >
+          <Fragment set:html={icons[item.id] ?? icons['dashboard']} />
           {item.label}
         </a>
       ))}
     </nav>
 
-    <div class="sidebar-bottom">
-      <div class="sidebar-user">
-        <div class="user-avatar" id="user-avatar">?</div>
-        <div>
-          <div class="user-name" id="user-name">Loading...</div>
-          <div class="user-email" id="user-email"></div>
+    <div class="sb-divider"></div>
+
+    <!-- Bottom: user + logout -->
+    <div class="sb-bottom">
+      <div class="sb-user">
+        <div class="sb-avatar" id="user-avatar">?</div>
+        <div class="sb-user-info">
+          <div class="sb-user-name" id="user-name">Memuat...</div>
+          <div class="sb-user-role">{role === 'admin' ? 'Administrator' : 'Pelajar'}</div>
         </div>
       </div>
-      <button class="btn-logout" id="btn-logout">
-        <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9"/>
+      <button class="sb-logout" id="btn-logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/>
+          <polyline points="16 17 21 12 16 7"/>
+          <line x1="21" y1="12" x2="9" y2="12"/>
         </svg>
         Keluar
       </button>
     </div>
   </aside>
 
-  <!-- Main -->
+  <!-- ══ MAIN ══ -->
   <main class="main" id="main-content">
     <div class="topbar">
-      <span class="topbar-title">{title}</span>
+      <div class="topbar-left">
+        <span class="topbar-bc">BrainUp</span>
+        <span class="topbar-sep">/</span>
+        <span class="topbar-pg">{title}</span>
+      </div>
+      <div class="topbar-right">
+        <div class="tb-date">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span id="topbar-date-text">—</span>
+        </div>
+        <button class="tb-btn" title="Notifikasi">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 01-3.46 0"/>
+          </svg>
+          <span class="tb-notif-dot">3</span>
+        </button>
+      </div>
     </div>
+
     <div class="page-content">
       <slot />
     </div>
@@ -294,43 +417,32 @@ const navItems = role === 'admin' ? adminNav : learnerNav;
 
     const requiredRole = document.body.dataset.role as 'admin' | 'learner' | undefined;
 
+    // Date in topbar
+    const dateEl = document.getElementById('topbar-date-text');
+    if (dateEl) {
+      dateEl.textContent = new Date().toLocaleDateString('id-ID', {
+        weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+      });
+    }
+
     async function initDashboard() {
       const { data: { session } } = await supabase.auth.getSession();
-
-      if (!session) {
-        window.location.replace('/login');
-        return;
-      }
+      if (!session) { window.location.replace('/login'); return; }
 
       const role = await getUserRole(session.user.id);
+      if (requiredRole === 'admin'   && role !== 'admin') { window.location.replace('/dashboard'); return; }
+      if (requiredRole === 'learner' && role === 'admin') { window.location.replace('/admin/dashboard'); return; }
 
-      // Role-based redirect guard
-      if (requiredRole === 'admin' && role !== 'admin') {
-        window.location.replace('/dashboard');
-        return;
-      }
-      if (requiredRole === 'learner' && role === 'admin') {
-        window.location.replace('/admin/dashboard');
-        return;
-      }
-
-      // Populate user info
       const email = session.user.email ?? '';
-      const initials = email.charAt(0).toUpperCase();
-      document.getElementById('user-avatar')!.textContent = initials;
-      document.getElementById('user-name')!.textContent = email.split('@')[0];
-      document.getElementById('user-email')!.textContent = email;
-
-      // Hide loading
+      document.getElementById('user-avatar')!.textContent = email.charAt(0).toUpperCase();
+      document.getElementById('user-name')!.textContent   = email.split('@')[0];
       document.getElementById('auth-loading')!.classList.add('hidden');
 
-      // Store session for use in page scripts
       (window as any).__supabaseSession = session;
       window.dispatchEvent(new CustomEvent('dashboard:ready', { detail: { session, role } }));
     }
 
     document.getElementById('btn-logout')?.addEventListener('click', () => signOut());
-
     initDashboard();
   </script>
 </body>

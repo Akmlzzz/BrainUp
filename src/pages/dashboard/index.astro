@@ -3,103 +3,561 @@ import DashboardLayout from '../../layouts/DashboardLayout.astro';
 ---
 
 <DashboardLayout title="Modul Belajar" activePage="modules" role="learner">
-  <div class="header-intro">
-    <h2 class="title">Modul Tersedia</h2>
-    <p class="subtitle">Pilih modul untuk mulai belajar dan kumpulkan poin kuis.</p>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-text">
+      <h1 class="page-title">Selamat Datang Kembali! 👋</h1>
+      <p class="page-sub">Terus belajar dan raih prestasi terbaikmu hari ini.</p>
+    </div>
+    <a href="/dashboard" class="btn-primary" id="btn-mulai">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347c-.75.412-1.667-.13-1.667-.986V5.653z"/>
+      </svg>
+      Lanjutkan Belajar
+    </a>
   </div>
 
-  <div class="grid" id="modules-grid">
-    <div class="loading">Memuat modul belajar terbaik untukmu...</div>
+  <!-- Stat Cards Row -->
+  <div class="stat-grid" id="stat-grid">
+    <!-- Card 1: Total Modul -->
+    <div class="stat-card card-blue">
+      <div class="stat-icon-wrap">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+        </svg>
+      </div>
+      <div class="stat-data">
+        <span class="stat-label">Total Modul</span>
+        <span class="stat-value" id="stat-total-modul">—</span>
+        <span class="stat-change positive">Tersedia untukmu</span>
+      </div>
+    </div>
+
+    <!-- Card 2: Modul Selesai -->
+    <div class="stat-card card-green">
+      <div class="stat-icon-wrap">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="stat-data">
+        <span class="stat-label">Modul Selesai</span>
+        <span class="stat-value" id="stat-selesai">0</span>
+        <span class="stat-change positive">↑ Hebat, terus tingkatkan!</span>
+      </div>
+    </div>
+
+    <!-- Card 3: Poin Kuis -->
+    <div class="stat-card card-purple">
+      <div class="stat-icon-wrap">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0"/>
+        </svg>
+      </div>
+      <div class="stat-data">
+        <span class="stat-label">Total Poin</span>
+        <span class="stat-value" id="stat-poin">0</span>
+        <span class="stat-change neutral">pts terkumpul</span>
+      </div>
+    </div>
+
+    <!-- Card 4: Streak Belajar -->
+    <div class="stat-card card-orange">
+      <div class="stat-icon-wrap">
+        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.362 5.214A8.252 8.252 0 0112 21 8.25 8.25 0 016.038 7.048 8.287 8.287 0 009 9.6a8.983 8.983 0 013.361-6.867 8.21 8.21 0 003 2.48z"/>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 18a3.75 3.75 0 00.495-7.467 5.99 5.99 0 00-1.925 3.546 5.974 5.974 0 01-2.133-1A3.75 3.75 0 0012 18z"/>
+        </svg>
+      </div>
+      <div class="stat-data">
+        <span class="stat-label">Streak Belajar</span>
+        <span class="stat-value">🔥 1</span>
+        <span class="stat-change positive">Hari berturut-turut</span>
+      </div>
+    </div>
   </div>
+
+  <!-- Main Grid: Progress + Modules -->
+  <div class="content-grid">
+
+    <!-- LEFT: Progress Section -->
+    <div class="progress-panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Progres Belajarmu</h3>
+        <span class="panel-badge" id="progress-pct-badge">0%</span>
+      </div>
+
+      <!-- Progress Ring -->
+      <div class="progress-ring-wrap">
+        <svg class="progress-ring" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="10"/>
+          <circle id="progress-arc" cx="60" cy="60" r="50" fill="none"
+            stroke="url(#ring-grad)" stroke-width="10"
+            stroke-linecap="round"
+            stroke-dasharray="314"
+            stroke-dashoffset="314"
+            transform="rotate(-90 60 60)"
+            style="transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);"
+          />
+          <defs>
+            <linearGradient id="ring-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6366f1"/>
+              <stop offset="100%" stop-color="#8b5cf6"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="ring-center">
+          <span class="ring-pct" id="ring-pct">0%</span>
+          <span class="ring-sub">Selesai</span>
+        </div>
+      </div>
+
+      <!-- Stats under ring -->
+      <div class="mini-stats">
+        <div class="mini-stat">
+          <span class="mini-val" id="ms-selesai">0</span>
+          <span class="mini-label">Selesai</span>
+        </div>
+        <div class="mini-stat-divider"></div>
+        <div class="mini-stat">
+          <span class="mini-val" id="ms-total">0</span>
+          <span class="mini-label">Total</span>
+        </div>
+        <div class="mini-stat-divider"></div>
+        <div class="mini-stat">
+          <span class="mini-val" id="ms-sisa">0</span>
+          <span class="mini-label">Tersisa</span>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="activity-section">
+        <h4 class="activity-title">Aktivitas Terakhir</h4>
+        <div class="activity-list" id="activity-list">
+          <div class="activity-item">
+            <div class="act-icon act-blue">📖</div>
+            <div class="act-info">
+              <span class="act-text">Buka dashboard</span>
+              <span class="act-time">Baru saja</span>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="act-icon act-green">✅</div>
+            <div class="act-info">
+              <span class="act-text">Sesi login berhasil</span>
+              <span class="act-time">Hari ini</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Module Grid -->
+    <div class="modules-panel">
+      <div class="panel-header">
+        <h3 class="panel-title">Modul Tersedia</h3>
+        <div class="search-box">
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+          </svg>
+          <input type="text" id="module-search" placeholder="Cari modul..."/>
+        </div>
+      </div>
+
+      <div class="modules-grid" id="modules-grid">
+        <div class="loading-state">
+          <div class="loading-spinner"></div>
+          <p>Memuat modul belajar...</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </DashboardLayout>
 
 <style>
-  .header-intro { margin-bottom: 32px; }
-  .title { font-size: 24px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-  .subtitle { font-size: 14px; color: rgba(255,255,255,0.5); }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-  }
-  
-  .loading { font-size: 13px; color: rgba(255,255,255,0.4); text-align: center; grid-column: 1 / -1; padding: 40px; }
-
-  /* These styles apply universally to injected dynamic cards */
-  :global(.modul-card) {
-    background: rgba(8,20,50,0.6);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 20px;
-    padding: 24px;
+  /* ── Page Header ── */
+  .page-header {
     display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    transition: all 0.3s;
-    backdrop-filter: blur(12px);
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 16px;
   }
-  :global(.modul-card:hover) {
-    transform: translateY(-6px);
-    border-color: rgba(59,130,246,0.4);
-    box-shadow: 0 16px 40px rgba(37,99,235,0.15);
+  .page-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #f1f5f9;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
   }
-  :global(.modul-icon) {
-    width: 44px; height: 44px; border-radius: 12px;
-    background: linear-gradient(135deg, rgba(37,99,235,0.2), rgba(6,182,212,0.1));
-    border: 1px solid rgba(59,130,246,0.25);
+  .page-sub { font-size: 13px; color: rgba(255,255,255,0.4); }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 20px; border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    color: #fff; font-size: 13px; font-weight: 700;
+    text-decoration: none; border: none; cursor: pointer;
+    box-shadow: 0 4px 16px rgba(37,99,235,0.35);
+    transition: all 0.2s;
+    font-family: 'Montserrat', sans-serif;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(37,99,235,0.45);
+    filter: brightness(1.08);
+  }
+
+  /* ── Stat Cards ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 1100px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .stat-grid { grid-template-columns: 1fr; } }
+
+  .stat-card {
+    background: #071428;
+    border: 1px solid rgba(59,130,246,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 16px 16px 0 0;
+  }
+  .stat-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+
+  .card-blue::after   { background: linear-gradient(90deg, #2563eb, #06b6d4); }
+  .card-green::after  { background: linear-gradient(90deg, #10b981, #34d399); }
+  .card-purple::after { background: linear-gradient(90deg, #3b82f6, #67e8f9); }
+  .card-orange::after { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
+
+  .stat-icon-wrap {
+    width: 44px; height: 44px;
+    border-radius: 12px;
     display: flex; align-items: center; justify-content: center;
-    color: #60a5fa; margin-bottom: 18px;
+    flex-shrink: 0;
   }
-  :global(.modul-title) { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 8px; line-height: 1.3}
-  :global(.modul-desc) { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.6; flex: 1; margin-bottom: 20px; }
-  :global(.modul-btn) {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 13px; font-weight: 700; color: #60a5fa;
+  .card-blue   .stat-icon-wrap { background: rgba(37,99,235,0.15);  color: #60a5fa; }
+  .card-green  .stat-icon-wrap { background: rgba(16,185,129,0.15); color: #34d399; }
+  .card-purple .stat-icon-wrap { background: rgba(6,182,212,0.15);  color: #67e8f9; }
+  .card-orange .stat-icon-wrap { background: rgba(245,158,11,0.15); color: #fbbf24; }
+
+  .stat-data { display: flex; flex-direction: column; gap: 2px; }
+  .stat-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.6px; }
+  .stat-value { font-size: 28px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.5px; line-height: 1; margin: 4px 0 2px; }
+  .stat-change { font-size: 11px; font-weight: 500; }
+  .stat-change.positive { color: #34d399; }
+  .stat-change.neutral { color: rgba(255,255,255,0.35); }
+  .stat-change.negative { color: #f87171; }
+
+  /* ── Content Grid ── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    align-items: start;
   }
+  @media (max-width: 1000px) { .content-grid { grid-template-columns: 1fr; } }
+
+  /* ── Panels ── */
+  .progress-panel, .modules-panel {
+    background: #071428;
+    border: 1px solid rgba(59,130,246,0.08);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid rgba(59,130,246,0.06);
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .panel-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e8f4ff;
+  }
+  .panel-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 99px;
+    background: rgba(37,99,235,0.12);
+    color: #93c5fd;
+    border: 1px solid rgba(59,130,246,0.22);
+  }
+
+  /* ── Progress Ring ── */
+  .progress-ring-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 24px 20px;
+    position: relative;
+  }
+  .progress-ring { width: 160px; height: 160px; }
+  .ring-center {
+    position: absolute;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+  }
+  .ring-pct { font-size: 28px; font-weight: 900; color: #e8f4ff; letter-spacing: -1px; }
+  .ring-sub { font-size: 11px; color: rgba(255,255,255,0.30); font-weight: 500; margin-top: 2px; }
+
+  /* Mini Stats */
+  .mini-stats {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 0 24px 20px;
+    border-bottom: 1px solid rgba(59,130,246,0.06);
+  }
+  .mini-stat { text-align: center; flex: 1; }
+  .mini-val { display: block; font-size: 20px; font-weight: 800; color: #e8f4ff; }
+  .mini-label { font-size: 10px; color: rgba(255,255,255,0.28); text-transform: uppercase; letter-spacing: 0.5px; }
+  .mini-stat-divider { width: 1px; height: 36px; background: rgba(59,130,246,0.08); margin: 0 4px; }
+
+  /* Activity */
+  .activity-section { padding: 20px 24px; }
+  .activity-title { font-size: 12px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 14px; }
+  .activity-list { display: flex; flex-direction: column; gap: 12px; }
+  .activity-item { display: flex; align-items: center; gap: 12px; }
+  .act-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .act-blue { background: rgba(99,102,241,0.1); }
+  .act-green { background: rgba(16,185,129,0.1); }
+  .act-purple { background: rgba(139,92,246,0.1); }
+  .act-info { display: flex; flex-direction: column; gap: 1px; overflow: hidden; }
+  .act-text { font-size: 12px; font-weight: 500; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .act-time { font-size: 10px; color: rgba(255,255,255,0.25); }
+
+  /* ── Search Box ── */
+  .search-box {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(37,99,235,0.06);
+    border: 1px solid rgba(59,130,246,0.14);
+    border-radius: 8px;
+    padding: 7px 12px;
+    color: rgba(255,255,255,0.30);
+  }
+  .search-box input {
+    background: transparent; border: none; outline: none;
+    color: #e8f4ff; font-size: 13px; font-family: 'Montserrat', sans-serif;
+    width: 160px;
+  }
+  .search-box input::placeholder { color: rgba(255,255,255,0.22); }
+
+  /* ── Modules Grid ── */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    padding: 20px;
+  }
+
+  .loading-state {
+    grid-column: 1/-1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 12px;
+    padding: 60px 20px;
+    color: rgba(255,255,255,0.3);
+    font-size: 13px;
+  }
+  .loading-spinner {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 2px solid rgba(99,102,241,0.15);
+    border-top-color: #6366f1;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Module card (global for dynamically created) */
+  :global(.mod-card) {
+    background: rgba(37,99,235,0.04);
+    border: 1px solid rgba(59,130,246,0.10);
+    border-radius: 14px;
+    padding: 18px;
+    text-decoration: none;
+    display: flex; flex-direction: column;
+    gap: 10px;
+    transition: all 0.25s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  :global(.mod-card::before) {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: linear-gradient(135deg, rgba(37,99,235,0.06) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  :global(.mod-card:hover) {
+    border-color: rgba(59,130,246,0.30);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 28px rgba(29,78,216,0.15);
+  }
+  :global(.mod-card:hover::before) { opacity: 1; }
+  :global(.mod-emoji) {
+    font-size: 28px;
+    width: 52px; height: 52px;
+    background: rgba(37,99,235,0.12);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  :global(.mod-top) {
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 8px;
+  }
+  :global(.mod-badge) {
+    font-size: 10px; font-weight: 700;
+    padding: 3px 8px; border-radius: 99px; white-space: nowrap;
+    text-transform: uppercase; letter-spacing: 0.4px;
+  }
+  :global(.mod-badge.done) {
+    background: rgba(16,185,129,0.10); color: #34d399;
+    border: 1px solid rgba(16,185,129,0.18);
+  }
+  :global(.mod-badge.todo) {
+    background: rgba(59,130,246,0.08); color: #93c5fd;
+    border: 1px solid rgba(59,130,246,0.16);
+  }
+  :global(.mod-title) {
+    font-size: 14px; font-weight: 700; color: #e8f4ff; line-height: 1.4;
+  }
+  :global(.mod-desc) {
+    font-size: 12px; color: rgba(255,255,255,0.32); line-height: 1.5; flex: 1;
+  }
+  :global(.mod-footer) {
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-top: 10px;
+    border-top: 1px solid rgba(59,130,246,0.07);
+  }
+  :global(.mod-cta) {
+    font-size: 12px; font-weight: 600; color: #60a5fa;
+    display: flex; align-items: center; gap: 4px;
+    transition: gap 0.2s;
+  }
+  :global(.mod-card:hover .mod-cta) { gap: 8px; }
 </style>
 
 <script>
   import { supabase } from '../../lib/supabase';
 
   const grid = document.getElementById('modules-grid')!;
+  const searchInput = document.getElementById('module-search') as HTMLInputElement;
+  let allModules: any[] = [];
 
-  async function loadLearnerModules() {
+  const EMOJIS = ['🧮','📐','🔭','🧬','💡','📊','🗺️','🎨','⚙️','🌐','🔬','📚'];
+
+  async function loadLearnerDashboard() {
+    // Fetch modules
     const { data, error } = await supabase.from('modules').select('*').order('created_at', { ascending: true });
-    
+
     if (error) {
-      grid.innerHTML = '<div class="loading" style="color:#ef4444;">Gagal memuat modul.</div>';
+      grid.innerHTML = '<div class="loading-state" style="color:#f87171;">Gagal memuat modul. Coba refresh.</div>';
       return;
     }
 
-    if (!data || data.length === 0) {
-      grid.innerHTML = '<div class="loading">Sabar ya, instruktur masih menyusun modul. ☕</div>';
+    allModules = data || [];
+
+    // Update stats
+    const total = allModules.length;
+    const selesai = Math.floor(total * 0.3); // Mock: replace with real quiz data
+    const poin = selesai * 100;
+    const pct = total > 0 ? Math.round((selesai / total) * 100) : 0;
+
+    document.getElementById('stat-total-modul')!.textContent = String(total);
+    document.getElementById('stat-selesai')!.textContent = String(selesai);
+    document.getElementById('stat-poin')!.textContent = String(poin);
+
+    // Progress ring
+    const arc = document.getElementById('progress-arc')!;
+    const circumference = 314;
+    const offset = circumference - (pct / 100) * circumference;
+    arc.style.strokeDashoffset = String(offset);
+    document.getElementById('ring-pct')!.textContent = pct + '%';
+    document.getElementById('progress-pct-badge')!.textContent = pct + '%';
+
+    // Mini stats
+    document.getElementById('ms-selesai')!.textContent = String(selesai);
+    document.getElementById('ms-total')!.textContent = String(total);
+    document.getElementById('ms-sisa')!.textContent = String(total - selesai);
+
+    renderModules(allModules);
+  }
+
+  function renderModules(modules: any[]) {
+    if (modules.length === 0) {
+      grid.innerHTML = `
+        <div class="loading-state" style="grid-column:1/-1;">
+          <span style="font-size:40px;">😴</span>
+          <p>Belum ada modul yang tersedia.</p>
+        </div>`;
       return;
     }
 
     grid.innerHTML = '';
-    data.forEach(m => {
+    modules.forEach((m, i) => {
+      const emoji = EMOJIS[i % EMOJIS.length];
+      const isDone = i % 3 === 0;
       const a = document.createElement('a');
-      a.className = 'modul-card';
-      a.href = `/dashboard/module?id=${m.id}`; // Using query param to avoid getStaticPaths need
-      
+      a.className = 'mod-card';
+      a.href = `/dashboard/module?id=${m.id}`;
       a.innerHTML = `
-        <div class="modul-icon">
-          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+        <div class="mod-top">
+          <div class="mod-emoji">${emoji}</div>
+          <span class="mod-badge ${isDone ? 'done' : 'todo'}">${isDone ? '✓ Selesai' : 'Belum'}</span>
         </div>
-        <h3 class="modul-title">${m.title}</h3>
-        <p class="modul-desc">${m.description?.slice(0, 80) || 'Pelajari konsep fundamental dan uji kemampuanmu.'}...</p>
-        <div class="modul-btn">
-          Mulai Belajar <span>→</span>
-        </div>
-      `;
+        <div class="mod-title">${m.title}</div>
+        <div class="mod-desc">${(m.description || 'Pelajari konsep penting dan kerjakan kuisnya.').slice(0, 70)}...</div>
+        <div class="mod-footer">
+          <span class="mod-cta">
+            Mulai
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
+          </span>
+        </div>`;
       grid.appendChild(a);
     });
   }
 
-  // Load right when dashboard auth guard passes
+  // Live search
+  searchInput?.addEventListener('input', () => {
+    const q = searchInput.value.toLowerCase();
+    const filtered = allModules.filter(m =>
+      m.title?.toLowerCase().includes(q) || m.description?.toLowerCase().includes(q)
+    );
+    renderModules(filtered);
+  });
+
   window.addEventListener('dashboard:ready', () => {
-    loadLearnerModules();
+    loadLearnerDashboard();
   });
 </script>

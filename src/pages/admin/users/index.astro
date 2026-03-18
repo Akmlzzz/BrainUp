@@ -1,0 +1,474 @@
+---
+import DashboardLayout from '../../../layouts/DashboardLayout.astro';
+---
+
+<DashboardLayout title="Pengguna" activePage="users" role="admin">
+
+  <!-- ══ PAGE HEADER ══ -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Manajemen Pengguna</h1>
+      <p class="page-sub">Pantau aktivitas, akses, dan peran seluruh akun yang terdaftar di platform BrainUp.</p>
+    </div>
+    <div class="header-actions">
+      <button class="btn-ghost" id="btn-export">
+        <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+        </svg>
+        Export CSV
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ STAT CARDS ══ -->
+  <div class="user-stats">
+    <div class="ustat-card">
+      <div class="ustat-icon blue">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+        </svg>
+      </div>
+      <div class="ustat-info">
+        <span class="ustat-label">Total Pengguna</span>
+        <span class="ustat-val" id="stat-total">0</span>
+      </div>
+    </div>
+    <div class="ustat-card">
+      <div class="ustat-icon cyan">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+        </svg>
+      </div>
+      <div class="ustat-info">
+        <span class="ustat-label">Pelajar</span>
+        <span class="ustat-val" id="stat-learner">0</span>
+      </div>
+    </div>
+    <div class="ustat-card">
+      <div class="ustat-icon red">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.83-5.83M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 8.25L7.5 11.25" />
+        </svg>
+      </div>
+      <div class="ustat-info">
+        <span class="ustat-label">Admin Platform</span>
+        <span class="ustat-val" id="stat-admin">0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ FILTER BAR ══ -->
+  <div class="filter-bar">
+    <div class="search-box">
+      <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+      </svg>
+      <input type="text" id="search-input" placeholder="Cari berdasarkan email atau ID..."/>
+    </div>
+    <div class="filter-right">
+      <div class="select-wrap">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <select id="filter-role">
+          <option value="">Semua Peran</option>
+          <option value="learner">Learner</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TABLE PANEL ══ -->
+  <div class="table-panel">
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width:48px">#</th>
+            <th>Info Pengguna</th>
+            <th style="width:140px">ID Referensi</th>
+            <th style="width:160px">Peran</th>
+            <th style="width:150px">Tanggal Gabung</th>
+            <th style="width:120px;text-align:center">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="users-body">
+          <tr>
+            <td colspan="6" class="loading-cell">
+              <div class="spinner"></div>
+              <span>Memuat data pengguna...</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ EDIT ROLE MODAL ══ -->
+  <div class="modal-overlay hidden" id="modal-role">
+    <div class="modal-box" style="max-width: 440px;">
+      <div class="modal-head">
+        <div class="modal-head-icon" style="background:rgba(99,102,241,0.15);color:#818cf8">
+          <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+          </svg>
+        </div>
+        <div class="modal-head-info">
+          <h2 class="modal-title">Ubah Hak Akses</h2>
+          <p class="modal-sub">Ubah peran pengguna ini (Admin / Learner).</p>
+        </div>
+      </div>
+      <form id="role-form" style="padding: 0 28px;">
+        <input type="hidden" id="edit-user-id"/>
+        <div class="user-chip" id="edit-user-email">...</div>
+        
+        <div class="form-group" style="margin-top:20px">
+          <label style="margin-bottom:6px">Pilih Peran Baru</label>
+          <div class="role-options">
+            <label class="role-radio">
+              <input type="radio" name="role_val" value="admin" id="radio-admin"/>
+              <div class="role-box admin-box">
+                <span class="role-badge badge-admin"><span class="badge-dot dot-red"></span>Admin</span>
+                <span class="role-desc">Akses penuh ke semua fitur dashboard, CRUD modul, dsb.</span>
+              </div>
+            </label>
+            <label class="role-radio">
+              <input type="radio" name="role_val" value="learner" id="radio-learner"/>
+              <div class="role-box learner-box">
+                <span class="role-badge badge-learner"><span class="badge-dot dot-cyan"></span>Learner</span>
+                <span class="role-desc">Pengguna reguler hanya bisa mengakses materi & kuis.</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-ghost" id="btn-cancel-role">Batal</button>
+          <button type="submit" class="btn-save" id="btn-save-role">Simpan Peran</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast notif -->
+  <div class="floating-toast hidden" id="main-toast"></div>
+
+</DashboardLayout>
+
+<!-- ══ STYLES ══ -->
+<style>
+  /* Header & Stats */
+  .page-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 14px;
+  }
+  .page-title { font-size: 24px; font-weight: 800; color: #f1f5f9; letter-spacing: -0.4px; margin-bottom: 5px; }
+  .page-sub { font-size: 13.5px; color: rgba(255,255,255,0.38); max-width: 520px; line-height: 1.6; }
+
+  .header-actions { display: flex; gap: 12px; }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 10px 18px; border-radius: 12px;
+    background: rgba(99,102,241,0.06);
+    border: 1px solid rgba(99,102,241,0.18);
+    color: #a5b4fc; font-size: 13px; font-weight: 700;
+    cursor: pointer; font-family: 'Montserrat', sans-serif;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .btn-ghost:hover { background: rgba(99,102,241,0.12); color: #c8d8fe; border-color: rgba(99,102,241,0.30); }
+
+  .user-stats {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px;
+  }
+  @media (max-width: 800px) { .user-stats { grid-template-columns: 1fr; } }
+  .ustat-card {
+    background: rgba(7,20,40,0.8);
+    border: 1px solid rgba(59,130,246,0.12);
+    border-radius: 16px; padding: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .ustat-icon {
+    width: 48px; height: 48px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .ustat-icon.blue { background: rgba(59,130,246,0.15); color: #60a5fa; }
+  .ustat-icon.cyan { background: rgba(6,182,212,0.15); color: #22d3ee; }
+  .ustat-icon.red  { background: rgba(239,68,68,0.15); color: #f87171; }
+  .ustat-info { display: flex; flex-direction: column; }
+  .ustat-label { font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
+  .ustat-val { font-size: 26px; font-weight: 800; color: #f1f5f9; line-height: 1; }
+
+  /* Filter Bar */
+  .filter-bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .search-box {
+    display: flex; align-items: center; gap: 10px;
+    flex: 1; min-width: 200px; max-width: 380px;
+    background: rgba(15,25,50,0.7);
+    border: 1px solid rgba(99,102,241,0.18);
+    border-radius: 12px; padding: 11px 16px;
+    color: rgba(255,255,255,0.32);
+    transition: border-color 0.2s;
+  }
+  .search-box:focus-within { border-color: rgba(99,102,241,0.45); }
+  .search-box input {
+    background: transparent; border: none; outline: none;
+    color: #e8f4ff; font-size: 13.5px; font-family: 'Montserrat', sans-serif;
+    flex: 1;
+  }
+  .search-box input::placeholder { color: rgba(255,255,255,0.22); }
+  .select-wrap {
+    position: relative; display: flex; align-items: center; gap: 9px;
+    background: rgba(15,25,50,0.7);
+    border: 1px solid rgba(99,102,241,0.18);
+    border-radius: 12px; padding: 10px 14px;
+    color: rgba(255,255,255,0.38);
+    transition: border-color 0.2s;
+  }
+  .select-wrap select { background: transparent; border: none; outline: none; color: #e8f4ff; font-size: 13px; font-family: 'Montserrat', sans-serif; cursor: pointer; appearance: none; padding-right: 4px; }
+  .select-wrap select option { background: #0d1b35; color: #e8f4ff; }
+
+  /* Table */
+  .table-panel {
+    background: rgba(7,20,40,0.9);
+    border: 1px solid rgba(99,102,241,0.10);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 4px 30px rgba(0,0,0,0.3);
+  }
+  .table-wrap { overflow-x: auto; }
+  .data-table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
+  .data-table th {
+    font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.28);
+    text-transform: uppercase; letter-spacing: 0.8px; padding: 14px 22px;
+    background: rgba(0,0,0,0.25); border-bottom: 1px solid rgba(99,102,241,0.08);
+  }
+  :global(.data-table td) {
+    font-size: 13.5px; padding: 18px 22px;
+    border-bottom: 1px solid rgba(99,102,241,0.06);
+    color: #c8d9f0; vertical-align: middle;
+  }
+  :global(.data-table tbody tr:last-child td) { border-bottom: none; }
+  :global(.data-table tbody tr:hover td) { background: rgba(99,102,241,0.04); }
+
+  .loading-cell { text-align: center; padding: 60px 24px !important; color: rgba(255,255,255,0.25) !important; font-size: 13px !important; display: flex; align-items: center; justify-content: center; gap: 12px; }
+  .spinner { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid rgba(99,102,241,0.15); border-top-color: #6366f1; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Rows */
+  :global(.row-num) { font-size: 12px; color: rgba(255,255,255,0.20); font-weight: 600; }
+  :global(.user-cell) { display: flex; align-items: center; gap: 14px; }
+  :global(.u-avatar) { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #1e3a8a, #0891b2); color: #fff; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+  :global(.u-info) { display: flex; flex-direction: column; gap: 3px; }
+  :global(.u-email) { font-weight: 700; color: #f1f5f9; font-size: 14px; }
+  :global(.u-name) { font-size: 11.5px; color: rgba(255,255,255,0.35); }
+  
+  :global(.ref-id) { font-family: monospace; font-size: 12px; color: rgba(255,255,255,0.4); padding: 5px 8px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; }
+  :global(.join-date) { font-size: 12.5px; color: rgba(255,255,255,0.4); }
+
+  :global(.role-badge) { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 8px; font-size: 11.5px; font-weight: 700; }
+  :global(.badge-admin) { background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.22); color: #fca5a5; }
+  :global(.badge-learner) { background: rgba(6,182,212,0.10); border: 1px solid rgba(6,182,212,0.20); color: #67e8f9; }
+  :global(.badge-dot) { width: 6px; height: 6px; border-radius: 50%; }
+  :global(.dot-red) { background: #ef4444; box-shadow: 0 0 5px rgba(239,68,68,0.5); }
+  :global(.dot-cyan) { background: #06b6d4; }
+
+  /* Actions */
+  :global(.action-group) { display: flex; align-items: center; gap: 6px; justify-content: center; }
+  :global(.btn-act) { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 8px; font-size: 11.5px; font-weight: 600; border: 1px solid; cursor: pointer; font-family: 'Montserrat', sans-serif; transition: all 0.15s; }
+  :global(.btn-act svg) { width: 14px; height: 14px; }
+  :global(.btn-act.edit) { background: rgba(99,102,241,0.10); border-color: rgba(99,102,241,0.22); color: #a5b4fc; }
+  :global(.btn-act.edit:hover) { background: rgba(99,102,241,0.20); color: #c7d2fe; }
+  
+  :global(.empty-state) { text-align: center; padding: 70px 24px !important; color: rgba(255,255,255,0.22) !important; }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(4,10,25,0.85); backdrop-filter: blur(12px); display: flex; align-items: center; justify-content: center; z-index: 900; padding: 20px; }
+  .modal-overlay.hidden { display: none !important; }
+  .modal-box { background: #060e22; border: 1px solid rgba(99,102,241,0.20); border-radius: 24px; padding: 0; width: 100%; box-shadow: 0 40px 100px rgba(0,0,0,0.70); animation: popIn 0.25s cubic-bezier(0.4,0,0.2,1); }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.96) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+
+  .modal-head { display: flex; align-items: flex-start; gap: 16px; padding: 28px 28px 18px; }
+  .modal-head-icon { width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .modal-title { font-size: 18px; font-weight: 800; color: #e8f4ff; margin-bottom: 3px; }
+  .modal-sub { font-size: 12px; color: rgba(255,255,255,0.32); line-height: 1.5; }
+
+  .user-chip { display: inline-flex; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); padding: 8px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; color: #e8f4ff; }
+  
+  .role-options { display: flex; flex-direction: column; gap: 10px; }
+  .role-radio { display: block; cursor: pointer; }
+  .role-radio input { display: none; }
+  .role-box { padding: 14px 16px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; background: rgba(255,255,255,0.02); transition: all 0.2s; display: flex; flex-direction: column; gap: 6px; }
+  .role-desc { font-size: 11.5px; color: rgba(255,255,255,0.35); }
+  .role-radio input:checked + .admin-box { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.3); }
+  .role-radio input:checked + .learner-box { background: rgba(6,182,212,0.08); border-color: rgba(6,182,212,0.3); }
+
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; padding: 24px 28px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 24px; }
+  .btn-save { padding: 10px 22px; border-radius: 10px; background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; font-size: 13px; font-weight: 700; border: none; cursor: pointer; font-family: 'Montserrat', sans-serif; box-shadow: 0 4px 16px rgba(99,102,241,0.38); transition: all 0.2s; }
+  .btn-save:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+  /* Floating Toast */
+  .floating-toast { position: fixed; bottom: 30px; right: 30px; padding: 14px 22px; border-radius: 12px; font-size: 13px; font-weight: 600; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 9999; animation: slideInX 0.3s; }
+  .floating-toast.success { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #6ee7b7; backdrop-filter: blur(8px); }
+  .floating-toast.hidden { display: none !important; }
+  @keyframes slideInX { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+</style>
+
+<script>
+  import { supabase } from '../../../lib/supabase';
+
+  let allUsers: any[] = [];
+  
+  const tbody        = document.getElementById('users-body')!;
+  const searchInput  = document.getElementById('search-input') as HTMLInputElement;
+  const filterRole   = document.getElementById('filter-role') as HTMLSelectElement;
+  
+  const modalRole    = document.getElementById('modal-role')!;
+  const roleForm     = document.getElementById('role-form') as HTMLFormElement;
+  const toast        = document.getElementById('main-toast')!;
+
+  async function loadData() {
+    // Usually 'users' table or a custom view.
+    const { data, error } = await supabase.from('users').select('*').order('created_at', { ascending: false });
+    if (error) {
+      console.error(error);
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state">❌ Gagal memuat data pengguna: ${error.message}</td></tr>`;
+      return;
+    }
+    
+    // Some users might have their email mapped, some might not depending on schema.
+    allUsers = data || [];
+    
+    // Update Stats
+    document.getElementById('stat-total')!.textContent = String(allUsers.length);
+    document.getElementById('stat-admin')!.textContent = String(allUsers.filter(u => u.role === 'admin').length);
+    document.getElementById('stat-learner')!.textContent = String(allUsers.filter(u => u.role !== 'admin').length);
+
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const q = searchInput.value.toLowerCase().trim();
+    const role = filterRole.value;
+
+    let filtered = allUsers.filter(u => {
+      // safely read email or generate dummy for search
+      const email = typeof u.email === 'string' ? u.email : `user_${u.id.substring(0,8)}@brainup.com`;
+      const matchSearch = !q || email.toLowerCase().includes(q) || u.id.toLowerCase().includes(q);
+      const matchRole = !role || (u.role || 'learner') === role;
+      return matchSearch && matchRole;
+    });
+
+    renderTable(filtered);
+  }
+
+  function renderTable(data: any[]) {
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="6" class="empty-state"><span style="font-size:32px;display:block;margin-bottom:10px">📭</span><span>Tidak ada pengguna yang cocok dengan filter.</span></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = '';
+    data.forEach((u, i) => {
+      const tr = document.createElement('tr');
+      const email = typeof u.email === 'string' ? u.email : `user_${u.id.substring(0,8)}@contoh.com`;
+      const initial = email.charAt(0).toUpperCase();
+      const role = u.role || 'learner';
+      const cDate = u.created_at ? new Date(u.created_at).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}) : '—';
+
+      tr.innerHTML = `
+        <td><span class="row-num">0${i + 1}</span></td>
+        <td>
+          <div class="user-cell">
+            <div class="u-avatar">${initial}</div>
+            <div class="u-info">
+              <span class="u-email">${escHtml(email)}</span>
+              <span class="u-name">Pengguna Terdaftar</span>
+            </div>
+          </div>
+        </td>
+        <td><span class="ref-id">${u.id.substring(0, 12)}...</span></td>
+        <td>
+          ${role === 'admin' 
+            ? `<span class="role-badge badge-admin"><span class="badge-dot dot-red"></span>Admin</span>`
+            : `<span class="role-badge badge-learner"><span class="badge-dot dot-cyan"></span>Learner</span>`
+          }
+        </td>
+        <td><span class="join-date">${cDate}</span></td>
+        <td>
+          <div class="action-group">
+            <button class="btn-act edit" data-id="${u.id}" data-email="${escHtml(email)}" data-role="${role}">
+              <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z"/></svg>
+              Ubah Akses
+            </button>
+          </div>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Attach Events
+    document.querySelectorAll<HTMLButtonElement>('.btn-act.edit').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('edit-user-id')!.value = btn.dataset.id!;
+        document.getElementById('edit-user-email')!.textContent = btn.dataset.email!;
+        const r = btn.dataset.role!;
+        if (r === 'admin') (document.getElementById('radio-admin') as HTMLInputElement).checked = true;
+        else (document.getElementById('radio-learner') as HTMLInputElement).checked = true;
+        modalRole.classList.remove('hidden');
+      });
+    });
+  }
+
+  // Handle Form
+  roleForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = (document.getElementById('edit-user-id') as HTMLInputElement).value;
+    const roleVal = Array.from(document.getElementsByName('role_val') as NodeListOf<HTMLInputElement>).find(r => r.checked)?.value;
+    
+    if (!id || !roleVal) return;
+
+    const btn = document.getElementById('btn-save-role') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = 'Menyimpan...';
+
+    const { error } = await supabase.from('users').update({ role: roleVal }).eq('id', id);
+    
+    btn.disabled = false; btn.textContent = 'Simpan Peran';
+    modalRole.classList.add('hidden');
+
+    if (error) {
+      showToast('❌ Gagal mengubah peran: ' + error.message, 'error');
+    } else {
+      showToast('✅ Peran akses berhasil diperbarui!', 'success');
+      loadData(); // reload
+    }
+  });
+
+  // Modal Close
+  document.getElementById('btn-cancel-role')!.addEventListener('click', () => modalRole.classList.add('hidden'));
+  modalRole.addEventListener('click', e => { if (e.target === modalRole) modalRole.classList.add('hidden'); });
+
+  // Filter Listners
+  searchInput.addEventListener('input', applyFilters);
+  filterRole.addEventListener('change', applyFilters);
+
+  // Export Mock
+  document.getElementById('btn-export')!.addEventListener('click', () => {
+    showToast('✅ Laporan sedang diunduh...', 'success');
+  });
+
+  function showToast(msg: string, type: 'success'|'error') {
+    toast.textContent = msg;
+    toast.className = `floating-toast ${type}`;
+    setTimeout(() => { toast.classList.add('hidden'); }, 4000);
+  }
+
+  function escHtml(str: string): string {
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  window.addEventListener('dashboard:ready', loadData);
+</script>

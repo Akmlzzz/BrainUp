@@ -1,0 +1,14 @@
+---
+import '../../../styles/global.css';
+import DashboardLayout from '../../../layouts/DashboardLayout.astro';
+import QuizIsland from '../../../components/learner/QuizIsland';
+
+// Mock data untuk title quiz
+const quizTitle = 'Kuis Dasar Struktur Data & Arsitektur';
+---
+
+<DashboardLayout title={quizTitle} activePage="quiz" role="learner">
+  <div class="-mx-4 md:-mx-2 -mt-6">
+    <QuizIsland title={quizTitle} client:only="react" />
+  </div>
+</DashboardLayout>

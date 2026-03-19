@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-// Data Struktur
+// ─── Types ────────────────────────────────────────────────────────────────────
 interface Option {
   id: string;
   text: string;
@@ -14,6 +14,7 @@ interface Question {
   correctOptionId: string;
 }
 
+// ─── Mock Data ────────────────────────────────────────────────────────────────
 const mockQuestions: Question[] = [
   {
     id: 'q1',
@@ -28,7 +29,7 @@ const mockQuestions: Question[] = [
   },
   {
     id: 'q2',
-    text: 'Perhatikan istilah berikut. Manakah yang sering dikaitkan dengan metode pemrograman dimana sebuah fungsi memanggil dirinya sendiri?',
+    text: 'Perhatikan istilah berikut. Manakah yang sering dikaitkan dengan pemrograman dimana suatu fungsi memanggil dirinya sendiri?',
     correctOptionId: 'opt1',
     options: [
       { id: 'opt1', text: 'Rekursi' },
@@ -50,95 +51,85 @@ const mockQuestions: Question[] = [
   },
 ];
 
-const LOCAL_STORAGE_KEY = 'brainup_quiz_progress';
+const LOCAL_STORAGE_KEY   = 'brainup_quiz_progress';
 const LOCAL_STORAGE_START = 'brainup_quiz_start';
+const OPTION_LETTERS      = ['A', 'B', 'C', 'D', 'E'];
 
-interface QuizIslandProps {
-  title: string;
-}
+interface QuizIslandProps { title: string; }
 
+// ─── Component ────────────────────────────────────────────────────────────────
 export default function QuizIsland({ title }: QuizIslandProps) {
   const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const [isClient, setIsClient] = useState(false);
-  const [isFinished, setIsFinished] = useState(false);
-  const [startTime, setStartTime] = useState<number | null>(null);
-  const [timeTaken, setTimeTaken] = useState('');
+  const [selectedAnswers, setSelectedAnswers]       = useState<Record<string, string>>({});
+  const [isClient,  setIsClient]                    = useState(false);
+  const [isFinished, setIsFinished]                 = useState(false);
+  const [startTime,  setStartTime]                  = useState<number | null>(null);
+  const [timeTaken,  setTimeTaken]                  = useState('');
+  const [animKey,    setAnimKey]                    = useState(0); // re-trigger slide-in
 
-  // Initialize client-side state
+  // Init client
   useEffect(() => {
     setIsClient(true);
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.selectedAnswers) setSelectedAnswers(parsed.selectedAnswers);
+        if (parsed.selectedAnswers)           setSelectedAnswers(parsed.selectedAnswers);
         if (parsed.currentQuestionIdx !== undefined) setCurrentQuestionIdx(parsed.currentQuestionIdx);
-      } catch (e) {
-        console.error('Failed to parse saved quiz progress', e);
-      }
+      } catch {}
     }
-
     let st = localStorage.getItem(LOCAL_STORAGE_START);
-    if (!st) {
-      st = Date.now().toString();
-      localStorage.setItem(LOCAL_STORAGE_START, st);
-    }
+    if (!st) { st = Date.now().toString(); localStorage.setItem(LOCAL_STORAGE_START, st); }
     setStartTime(parseInt(st));
   }, []);
 
-  // Save to LocalStorage whenever answers or index changes
+  // Persist progress
   useEffect(() => {
     if (isClient && !isFinished) {
-      localStorage.setItem(
-        LOCAL_STORAGE_KEY,
-        JSON.stringify({
-          currentQuestionIdx,
-          selectedAnswers,
-        })
-      );
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({ currentQuestionIdx, selectedAnswers }));
     }
   }, [currentQuestionIdx, selectedAnswers, isClient, isFinished]);
 
-  if (!isClient) return <div className="min-h-screen bg-slate-950" />;
+  if (!isClient) return <div style={{ minHeight: '100vh' }} />;
 
-  const currentQuestion = mockQuestions[currentQuestionIdx];
-  const totalQuestions = mockQuestions.length;
-  const answeredCount = mockQuestions.filter(q => selectedAnswers[q.id]).length;
-  const progress = (answeredCount / totalQuestions) * 100;
-  
-  const handleSelect = (optionId: string) => {
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [currentQuestion.id]: optionId,
-    }));
-  };
+  const totalQuestions   = mockQuestions.length;
+  const currentQuestion  = mockQuestions[currentQuestionIdx];
+  const answeredCount    = Object.keys(selectedAnswers).length;
+  const progressPct      = (answeredCount / totalQuestions) * 100;
+  const isCurrentAnswered = !!selectedAnswers[currentQuestion.id];
+  const isLastQuestion   = currentQuestionIdx === totalQuestions - 1;
+
+  // Score calc
+  let correctCount = 0;
+  mockQuestions.forEach(q => { if (selectedAnswers[q.id] === q.correctOptionId) correctCount++; });
+  const incorrectCount = totalQuestions - correctCount;
+  const finalScore     = Math.round((correctCount / totalQuestions) * 100);
+
+  // Handlers
+  const handleSelect = (optionId: string) =>
+    setSelectedAnswers(prev => ({ ...prev, [currentQuestion.id]: optionId }));
 
   const handleNext = () => {
     if (currentQuestionIdx < totalQuestions - 1) {
-      setCurrentQuestionIdx(prev => prev + 1);
+      setCurrentQuestionIdx(p => p + 1);
+      setAnimKey(k => k + 1);
     }
   };
 
   const handleBack = () => {
     if (currentQuestionIdx > 0) {
-      setCurrentQuestionIdx(prev => prev - 1);
+      setCurrentQuestionIdx(p => p - 1);
+      setAnimKey(k => k + 1);
     }
   };
 
   const handleSubmit = () => {
     if (answeredCount < totalQuestions) {
-      const confirmSubmit = window.confirm('Anda belum menjawab semua soal. Yakin ingin mengumpulkan?');
-      if (!confirmSubmit) return;
+      if (!window.confirm('Anda belum menjawab semua soal. Yakin ingin mengumpulkan?')) return;
     }
-
-    // Kalkulasi waktu pengerjaan
-    const endTime = Date.now();
-    const diffInSeconds = Math.floor((endTime - (startTime || endTime)) / 1000);
-    const m = Math.floor(diffInSeconds / 60);
-    const s = diffInSeconds % 60;
-    setTimeTaken(`${m}m ${s}s`);
-
+    const end  = Date.now();
+    const diff = Math.floor((end - (startTime || end)) / 1000);
+    setTimeTaken(`${Math.floor(diff / 60)}m ${diff % 60}s`);
     setIsFinished(true);
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     localStorage.removeItem(LOCAL_STORAGE_START);
@@ -148,131 +139,150 @@ export default function QuizIsland({ title }: QuizIslandProps) {
     setIsFinished(false);
     setSelectedAnswers({});
     setCurrentQuestionIdx(0);
+    setAnimKey(0);
     const st = Date.now().toString();
     localStorage.setItem(LOCAL_STORAGE_START, st);
     setStartTime(parseInt(st));
   };
 
-  const handleExit = () => {
-    const confirmExit = window.confirm('Kembali ke menu utama? Progres Anda tersimpan.');
-    if (confirmExit) {
-      window.location.href = '/dashboard'; 
-    }
-  };
+  // Score badge
+  const scoreBadge =
+    finalScore >= 80 ? { label: 'Luar Biasa! 🏆', color: '#10b981', bg: 'rgba(16,185,129,0.12)', border: 'rgba(16,185,129,0.3)' }
+    : finalScore >= 60 ? { label: 'Bagus! 👍', color: '#3b82f6', bg: 'rgba(59,130,246,0.12)', border: 'rgba(59,130,246,0.3)' }
+    : { label: 'Perlu Latihan 💪', color: '#f59e0b', bg: 'rgba(245,158,11,0.12)', border: 'rgba(245,158,11,0.3)' };
 
-  // Kalkulasi Skor untuk Tampilan Result
-  let correctCount = 0;
-  mockQuestions.forEach(q => {
-    if (selectedAnswers[q.id] === q.correctOptionId) {
-      correctCount++;
-    }
-  });
-  const incorrectCount = totalQuestions - correctCount;
-  const rawScore = (correctCount / totalQuestions) * 100;
-  const finalScore = Math.round(rawScore);
+  // Circle progress
+  const CIRCLE_R  = 52;
+  const CIRCLE_C  = 2 * Math.PI * CIRCLE_R;
+  const dashOffset = CIRCLE_C - (finalScore / 100) * CIRCLE_C;
 
-  // DASHBOARD QUIZ RESULT VIEW
+  /* ══════════════════════════════════════════════════════════════
+     RESULT VIEW
+  ══════════════════════════════════════════════════════════════ */
   if (isFinished) {
-    const circleCircumference = 2 * Math.PI * 45; // r=45
-    const strokeDashoffset = circleCircumference - (finalScore / 100) * circleCircumference;
-
     return (
-      <div className="min-h-[calc(100vh-120px)] bg-[#06111f] border border-blue-500/10 rounded-2xl text-slate-200 shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-6 md:p-10">
-        
-        {/* HASIL UTAMA */}
-        <div className="flex flex-col md:flex-row gap-10 items-center justify-center bg-[#040d1e] border border-blue-500/10 p-8 rounded-2xl mb-10 shadow-xl relative overflow-hidden">
-          {/* Radial Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-500/10 rounded-full blur-[80px] pointer-events-none" />
+      <div style={S.resultPage}>
+        {/* Ambient blobs */}
+        <div style={{ ...S.blob, top: -80, right: -60, background: 'rgba(59,130,246,0.08)' }} />
+        <div style={{ ...S.blob, bottom: -100, left: -80, background: 'rgba(139,92,246,0.07)' }} />
 
-          {/* CIRCLE PROGRESS SKOR */}
-          <div className="relative w-40 h-40 flex items-center justify-center shrink-0">
-            {/* Background Circle */}
-            <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 100 100">
-              <circle cx="50" cy="50" r="45" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-800/80" />
-              {/* Progress Circle */}
-              <circle 
-                cx="50" cy="50" r="45" 
-                stroke="currentColor" 
-                strokeWidth="8" 
-                fill="transparent" 
-                className="text-blue-500 transition-all duration-1000 ease-out"
-                strokeDasharray={circleCircumference}
-                strokeDashoffset={strokeDashoffset}
+        {/* ── HEADER ── */}
+        <div style={S.resultHeader}>
+          <div style={S.resultHeaderLeft}>
+            <div style={S.resultIconBox}>
+              <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="#60a5fa" strokeWidth="2">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <div>
+              <h2 style={S.resultTitle}>Hasil Kuis</h2>
+              <p style={S.resultSubtitle}>{title}</p>
+            </div>
+          </div>
+          <div style={{ ...S.scorePill, background: scoreBadge.bg, border: `1px solid ${scoreBadge.border}`, color: scoreBadge.color }}>
+            {scoreBadge.label}
+          </div>
+        </div>
+
+        {/* ── SCORE SUMMARY ROW ── */}
+        <div style={S.scoreSummaryRow}>
+
+          {/* Circle Score */}
+          <div style={S.circleCard}>
+            <svg width="140" height="140" viewBox="0 0 120 120" style={{ transform: 'rotate(-90deg)' }}>
+              <defs>
+                <linearGradient id="scoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor={finalScore >= 80 ? '#10b981' : finalScore >= 60 ? '#3b82f6' : '#f59e0b'} />
+                  <stop offset="100%" stopColor={finalScore >= 80 ? '#34d399' : finalScore >= 60 ? '#06b6d4' : '#fbbf24'} />
+                </linearGradient>
+              </defs>
+              <circle cx="60" cy="60" r={CIRCLE_R} stroke="rgba(255,255,255,0.05)" strokeWidth="10" fill="transparent" />
+              <circle
+                cx="60" cy="60" r={CIRCLE_R}
+                stroke="url(#scoreGrad)"
+                strokeWidth="10" fill="transparent"
                 strokeLinecap="round"
+                strokeDasharray={CIRCLE_C}
+                strokeDashoffset={dashOffset}
+                style={{ transition: 'stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1)' }}
               />
             </svg>
-            <div className="absolute flex flex-col items-center justify-center text-center">
-              <span className="text-4xl font-black text-white">{finalScore}</span>
-              <span className="text-xs text-blue-400 font-semibold uppercase tracking-widest mt-1">Skor</span>
+            <div style={S.circleInner}>
+              <span style={S.circleValue}>{finalScore}</span>
+              <span style={S.circleLabel}>Skor</span>
             </div>
           </div>
 
-          {/* SUMMARY CARDS */}
-          <div className="w-full max-w-sm flex flex-col gap-3 z-10">
-            <h2 className="text-2xl font-bold text-white mb-2 text-center md:text-left">Kuis Selesai!</h2>
-            <div className="grid grid-cols-2 gap-3">
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-4 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-emerald-400">{correctCount}</span>
-                <span className="text-xs font-medium text-emerald-500/70 uppercase">Benar</span>
-              </div>
-              <div className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-rose-400">{incorrectCount}</span>
-                <span className="text-xs font-medium text-rose-500/70 uppercase">Salah</span>
-              </div>
+          {/* Stats grid */}
+          <div style={S.statsGrid}>
+            <div style={{ ...S.statBox, background: 'rgba(16,185,129,0.08)', border: '1px solid rgba(16,185,129,0.22)', borderRadius: 18 }}>
+              <span style={{ ...S.statNum, color: '#34d399' }}>{correctCount}</span>
+              <span style={{ ...S.statLabel, color: 'rgba(52,211,153,0.7)' }}>✓ Benar</span>
             </div>
-            <div className="bg-slate-800/40 border border-slate-700/50 rounded-xl p-3 flex items-center justify-between px-5 mt-1">
-              <span className="text-sm font-medium text-slate-400">Waktu Pengerjaan</span>
-              <span className="text-sm font-bold text-white">{timeTaken}</span>
+            <div style={{ ...S.statBox, background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.22)', borderRadius: 18 }}>
+              <span style={{ ...S.statNum, color: '#f87171' }}>{incorrectCount}</span>
+              <span style={{ ...S.statLabel, color: 'rgba(248,113,113,0.7)' }}>✗ Salah</span>
+            </div>
+            <div style={{ ...S.statBox, background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.22)', borderRadius: 18 }}>
+              <span style={{ ...S.statNum, color: '#60a5fa' }}>{totalQuestions}</span>
+              <span style={{ ...S.statLabel, color: 'rgba(96,165,250,0.7)' }}>Total Soal</span>
+            </div>
+            <div style={{ ...S.statBox, background: 'rgba(139,92,246,0.08)', border: '1px solid rgba(139,92,246,0.22)', borderRadius: 18 }}>
+              <span style={{ ...S.statNum, color: '#a78bfa', fontSize: 22 }}>{timeTaken}</span>
+              <span style={{ ...S.statLabel, color: 'rgba(167,139,250,0.7)' }}>⏱ Waktu</span>
             </div>
           </div>
         </div>
 
-        {/* REVIEW SECTION */}
-        <div className="mb-10">
-          <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-3">
-            <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
-            Review Jawaban Anda
-          </h3>
-          <div className="flex flex-col gap-6">
+        {/* ── REVIEW ── */}
+        <div style={S.reviewSection}>
+          <div style={S.reviewHeader}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#818cf8" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+            <h3 style={S.reviewTitle}>Review Jawaban</h3>
+          </div>
+
+          <div style={S.reviewBody}>
             {mockQuestions.map((q, i) => {
               const userAnswerId = selectedAnswers[q.id];
-              const isCorrect = userAnswerId === q.correctOptionId;
-
+              const isCorrect    = userAnswerId === q.correctOptionId;
               return (
-                <div key={q.id} className={`p-6 rounded-xl border ${isCorrect ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-rose-500/5 border-rose-500/10'}`}>
-                  <div className="flex items-start gap-4 mb-4">
-                    <div className={`shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm ${isCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'}`}>
+                <div key={q.id} style={{ ...S.reviewItem, borderBottom: i < mockQuestions.length - 1 ? '1px solid rgba(255,255,255,0.05)' : 'none' }}>
+                  {/* Question row */}
+                  <div style={S.reviewQRow}>
+                    <div style={{ ...S.reviewQNum, background: isCorrect ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)', color: isCorrect ? '#34d399' : '#f87171', border: `1px solid ${isCorrect ? 'rgba(16,185,129,0.3)' : 'rgba(239,68,68,0.3)'}` }}>
                       {i + 1}
                     </div>
-                    <p className="text-base text-slate-200 font-medium pt-1 leading-relaxed">
-                      {q.text}
-                    </p>
+                    <p style={S.reviewQText}>{q.text}</p>
+                    <span style={{ ...S.reviewBadge, background: isCorrect ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)', color: isCorrect ? '#34d399' : '#f87171', border: `1px solid ${isCorrect ? 'rgba(16,185,129,0.25)' : 'rgba(239,68,68,0.25)'}` }}>
+                      {isCorrect ? '✓ Benar' : '✗ Salah'}
+                    </span>
                   </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-12">
+
+                  {/* Options */}
+                  <div style={S.reviewOptions}>
                     {q.options.map(opt => {
-                      const isSelected = userAnswerId === opt.id;
-                      const isActualCorrect = q.correctOptionId === opt.id;
-                      
-                      let optionStyle = "bg-slate-900/40 border-slate-800 text-slate-400"; // default
-                      let icon = null;
-
-                      if (isActualCorrect) {
-                        optionStyle = "bg-emerald-500/10 border-emerald-500/40 text-emerald-300 font-semibold shadow-[0_0_15px_rgba(16,185,129,0.1)]";
-                        icon = <svg className="w-5 h-5 text-emerald-400 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path></svg>;
-                      } else if (isSelected && !isCorrect) {
-                        optionStyle = "bg-rose-500/10 border-rose-500/40 text-rose-300 font-semibold";
-                        icon = <svg className="w-5 h-5 text-rose-400 ml-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12"></path></svg>;
-                      }
-
+                      const isSel     = userAnswerId === opt.id;
+                      const isCorrectOpt = q.correctOptionId === opt.id;
+                      const style =
+                        isCorrectOpt ? { background: 'rgba(16,185,129,0.10)', border: '1px solid rgba(16,185,129,0.40)', color: '#d1fae5' }
+                        : isSel && !isCorrect ? { background: 'rgba(239,68,68,0.10)', border: '1px solid rgba(239,68,68,0.40)', color: '#fecaca' }
+                        : { background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', color: 'rgba(255,255,255,0.35)' };
                       return (
-                        <div key={opt.id} className={`p-4 rounded-lg border flex items-center gap-3 transition-colors ${optionStyle}`}>
-                          <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${isActualCorrect ? 'border-emerald-500 bg-emerald-500' : isSelected ? 'border-rose-500 bg-rose-500' : 'border-slate-700'}`}>
-                            {isActualCorrect && <div className="w-2 h-2 bg-white rounded-full"></div>}
-                            {(isSelected && !isActualCorrect) && <div className="w-2 h-2 bg-white rounded-full"></div>}
-                          </div>
-                          <span className="text-sm">{opt.text}</span>
-                          {icon}
+                        <div key={opt.id} style={{ ...S.reviewOpt, ...style }}>
+                          <span style={S.reviewOptLetter}>{OPTION_LETTERS[q.options.indexOf(opt)]}</span>
+                          <span style={{ flex: 1, fontSize: 14 }}>{opt.text}</span>
+                          {isCorrectOpt && (
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#34d399" strokeWidth="3">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                          {isSel && !isCorrectOpt && (
+                            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="#f87171" strokeWidth="3">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          )}
                         </div>
                       );
                     })}
@@ -283,221 +293,602 @@ export default function QuizIsland({ title }: QuizIslandProps) {
           </div>
         </div>
 
-        {/* CALL TO ACTION */}
-        <div className="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row gap-4 justify-end">
-          <button
-            onClick={handleRetry}
-            className="px-6 py-3 bg-slate-800/80 hover:bg-slate-700 text-white font-medium rounded-xl border border-slate-700 transition-all flex items-center justify-center gap-2"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        {/* ── ACTIONS ── */}
+        <div style={S.actions}>
+          <button onClick={handleRetry} style={S.btnSecondary}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
             Ulangi Kuis
           </button>
-          <button
-            onClick={() => window.location.href = '/dashboard'}
-            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-medium rounded-xl shadow-lg shadow-blue-500/25 transition-all flex items-center justify-center gap-2"
-          >
+          <button onClick={() => (window.location.href = '/dashboard')} style={S.btnPrimary}>
             Kembali ke Dashboard
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
           </button>
         </div>
 
+        <style>{`
+          @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        `}</style>
       </div>
     );
   }
 
-  // ==== ACTIVE QUIZ VIEW ====
-  const isCurrentAnswered = !!selectedAnswers[currentQuestion.id];
-
+  /* ══════════════════════════════════════════════════════════════
+     ACTIVE QUIZ VIEW
+  ══════════════════════════════════════════════════════════════ */
   return (
-    <div className="min-h-[calc(100vh-120px)] bg-[#06111f] rounded-2xl border border-blue-500/10 shadow-[0_8px_30px_rgba(0,0,0,0.12)] text-slate-200 flex flex-col font-sans selection:bg-blue-500/30 relative">
-      
-      {/* HEADER STICKY */}
-      <header className="sticky top-[60px] z-30 bg-[#06111f]/90 backdrop-blur-xl border-b border-blue-500/10 pt-4 pb-3 rounded-t-2xl">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
-                </svg>
-              </div>
-              <h1 className="text-lg md:text-xl font-semibold text-slate-100 truncate pb-0.5">
-                {title}
-              </h1>
-            </div>
-            <button
-              onClick={handleExit}
-              className="flex items-center gap-2 text-slate-400 hover:text-white px-3 py-2 rounded-lg hover:bg-slate-800/80 transition-all text-sm font-medium group"
-            >
-              <span className="hidden sm:inline">Keluar</span>
-              <svg className="w-4 h-4 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
-          </div>
+    <div style={S.quizShell}>
+      {/* Ambient glow */}
+      <div style={{ ...S.blob, top: -40, right: 60, background: 'rgba(59,130,246,0.08)' }} />
 
-          <div className="flex flex-col gap-1.5">
-            <div className="flex justify-between items-center text-xs font-medium text-slate-400">
-              <span className="text-blue-400 font-semibold tracking-wide uppercase">Progres Anda</span>
-              <span className="bg-slate-800/50 px-2.5 py-1 rounded-full border border-slate-700/50">
-                <span className="text-white">{answeredCount}</span> / {totalQuestions} Terjawab
-              </span>
-            </div>
-            <div className="w-full bg-slate-800/80 rounded-full h-2.5 overflow-hidden border border-slate-700/30">
-              <div
-                className="bg-gradient-to-r from-blue-500 to-indigo-500 h-2.5 rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-700 ease-out"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* MAIN LAYOUT */}
-      <main className="flex-1 w-full max-w-3xl mx-auto px-4 sm:px-6 py-8 md:py-12 flex flex-col relative z-10">
-        {/* Glow effect in background */}
-        <div className="fixed top-1/4 left-1/2 -translate-x-1/2 w-full max-w-3xl h-[600px] bg-blue-900/10 rounded-[100%] blur-[120px] pointer-events-none -z-10" />
-
-        <div className="flex flex-col gap-8 w-full">
-          {/* Question Meta */}
-          <div className="flex items-center gap-3 w-full">
-            <span className="text-sm font-bold tracking-widest text-blue-400 uppercase bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
-              Soal {currentQuestionIdx + 1}
-            </span>
-          </div>
-
-          {/* Question Text */}
-          <div className="w-full">
-            <h2 className="text-xl md:text-2xl font-medium leading-relaxed text-slate-100 w-full break-words">
-              {currentQuestion.text}
-            </h2>
-          </div>
-
-          {/* Question Media (if any) */}
-          {currentQuestion.mediaUrl && (
-            <div className="w-full rounded-2xl overflow-hidden border border-slate-800/80 shadow-lg relative group bg-slate-900">
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <img
-                src={currentQuestion.mediaUrl}
-                alt="Pertanyaan visual"
-                className="w-full max-h-80 object-cover object-center transition-transform duration-700 group-hover:scale-105"
-                loading="lazy"
-              />
-            </div>
-          )}
-
-          {/* Options */}
-          <div className="flex flex-col gap-3.5 mt-2 w-full">
-            {currentQuestion.options.map((option, idx) => {
-              const isSelected = selectedAnswers[currentQuestion.id] === option.id;
-              const optionLetters = ['A', 'B', 'C', 'D', 'E'];
-
-              return (
-                <button
-                  key={option.id}
-                  onClick={() => handleSelect(option.id)}
-                  className={`group w-full text-left p-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-4 relative overflow-hidden ${
-                    isSelected
-                      ? 'border-blue-500 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.1)] text-white'
-                      : 'border-slate-800 bg-slate-900/60 hover:bg-slate-800 hover:border-slate-700 text-slate-300'
-                  }`}
-                >
-                  {/* Selected Indicator Background */}
-                  {isSelected && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-transparent pointer-events-none" />
-                  )}
-                  
-                  {/* Option Letter */}
-                  <div className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm transition-colors relative z-10 ${
-                    isSelected 
-                      ? 'bg-blue-500 text-white shadow-md' 
-                      : 'bg-slate-800 text-slate-400 group-hover:bg-slate-700 group-hover:text-slate-200'
-                  }`}>
-                    {optionLetters[idx] || idx + 1}
-                  </div>
-                  
-                  {/* Option Text */}
-                  <span className="text-base md:text-lg select-none relative z-10 font-medium">
-                    {option.text}
-                  </span>
-
-                  {/* Checked Icon */}
-                  {isSelected && (
-                    <div className="ml-auto flex-shrink-0 relative z-10 scale-in-center">
-                      <svg className="w-6 h-6 text-blue-400 drop-shadow-[0_0_8px_rgba(59,130,246,0.8)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </main>
-
-      {/* FOOTER NAVIGATION */}
-      <footer className="mt-auto border-t border-blue-500/10 bg-[#06111f]/90 backdrop-blur-md px-4 sm:px-6 py-5 sticky bottom-0 z-30 rounded-b-2xl">
-        <div className="max-w-3xl mx-auto flex items-center justify-between w-full">
-          {/* Back Button */}
-          <button
-            onClick={handleBack}
-            disabled={currentQuestionIdx === 0}
-            className={`flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
-              currentQuestionIdx === 0
-                ? 'opacity-0 pointer-events-none'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white active:scale-[0.98] border border-slate-700/50 hover:border-slate-600'
-            }`}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7"></path>
+      {/* ── TOP BAR ── */}
+      <div style={S.quizTopBar}>
+        {/* Left: icon + title */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+          <div style={S.quizTitleIcon}>
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="#60a5fa" strokeWidth="2">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            Kembali
-          </button>
-
-          {/* Next / Submit Button */}
-          {currentQuestionIdx === totalQuestions - 1 ? (
-             <button
-             onClick={handleSubmit}
-             className={`flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-semibold text-white transition-all shadow-lg active:scale-[0.98] ${
-               isCurrentAnswered
-                 ? 'bg-gradient-to-r from-emerald-500 to-green-500 hover:from-emerald-400 hover:to-green-400 shadow-emerald-500/25 border-emerald-400 border-t'
-                 : 'bg-slate-700 text-slate-300 hover:bg-slate-600 border border-slate-600'
-             }`}
-           >
-             Kumpulkan
-             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7"></path>
-             </svg>
-           </button>
-          ) : (
-            <button
-              onClick={handleNext}
-              className={`flex items-center justify-center gap-2 px-8 py-3 rounded-xl font-semibold text-white transition-all shadow-lg active:scale-[0.98] ${
-                isCurrentAnswered
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-500 hover:from-blue-500 hover:to-indigo-400 shadow-blue-500/25 border border-blue-500 border-t-blue-400'
-                  : 'bg-slate-800 text-slate-400 hover:bg-slate-700 border border-slate-700/50'
-              }`}
-            >
-              Selanjutnya
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          )}
+          </div>
+          <div>
+            <p style={S.quizTitleLabel}>Sedang Mengerjakan</p>
+            <h1 style={S.quizTitleText}>{title}</h1>
+          </div>
         </div>
-      </footer>
-      
-      {/* Custom Styles for tiny animations using arbitrary classes */}
+
+        {/* Right: progress pill + close */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={S.progressPill}>
+            <span style={S.progressPillNum}>{answeredCount}</span>
+            <span style={S.progressPillSep}>/</span>
+            <span style={S.progressPillTotal}>{totalQuestions}</span>
+            <span style={S.progressPillLabel}>Dijawab</span>
+          </div>
+          <button onClick={() => {
+            if (window.confirm('Kembali ke menu utama? Progres Anda tersimpan.'))
+              window.location.href = '/dashboard';
+          }} style={S.closeBtn} title="Tutup Kuis">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* ── PROGRESS BAR ── */}
+      <div style={S.progressBarWrap}>
+        <div style={S.progressBarTrack}>
+          <div style={{ ...S.progressBarFill, width: `${progressPct}%` }} />
+        </div>
+        <span style={S.progressBarLabel}>{Math.round(progressPct)}% selesai</span>
+      </div>
+
+      {/* ── QUESTION NAVIGATOR (dots) ── */}
+      <div style={S.dotsRow}>
+        {mockQuestions.map((q, i) => {
+          const answered = !!selectedAnswers[q.id];
+          const active   = i === currentQuestionIdx;
+          return (
+            <button
+              key={q.id}
+              onClick={() => { setCurrentQuestionIdx(i); setAnimKey(k => k + 1); }}
+              style={{
+                ...S.dot,
+                background: active ? '#3b82f6' : answered ? 'rgba(16,185,129,0.5)' : 'rgba(255,255,255,0.08)',
+                border: active ? '2px solid rgba(96,165,250,0.6)' : answered ? '2px solid rgba(52,211,153,0.4)' : '2px solid transparent',
+                transform: active ? 'scale(1.25)' : 'scale(1)',
+                color: active ? '#fff' : answered ? '#d1fae5' : 'rgba(255,255,255,0.38)',
+                boxShadow: active ? '0 0 12px rgba(59,130,246,0.55)' : 'none',
+              }}
+              title={`Soal ${i + 1}`}
+            >
+              {i + 1}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* ── QUESTION BODY ── */}
+      <div key={animKey} style={S.questionBody}>
+        {/* Question number chip */}
+        <div style={S.questionChip}>
+          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="#60a5fa" strokeWidth="2.5">
+            <circle cx="12" cy="12" r="10" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3" />
+          </svg>
+          Pertanyaan {currentQuestionIdx + 1} dari {totalQuestions}
+        </div>
+
+        {/* Question text */}
+        <h2 style={S.questionText}>{currentQuestion.text}</h2>
+
+        {/* Image (if any) */}
+        {currentQuestion.mediaUrl && (
+          <div style={S.questionImage}>
+            <img src={currentQuestion.mediaUrl} alt="Ilustrasi Soal" style={{ width: '100%', maxHeight: 280, objectFit: 'cover' }} />
+          </div>
+        )}
+
+        {/* Options */}
+        <div style={S.optionsGrid}>
+          {currentQuestion.options.map((option, idx) => {
+            const isSelected = selectedAnswers[currentQuestion.id] === option.id;
+            return (
+              <button
+                key={option.id}
+                onClick={() => handleSelect(option.id)}
+                style={{
+                  ...S.optionBtn,
+                  background: isSelected ? 'rgba(59,130,246,0.12)' : 'rgba(255,255,255,0.03)',
+                  border: isSelected ? '2px solid rgba(96,165,250,0.6)' : '2px solid rgba(255,255,255,0.07)',
+                  boxShadow: isSelected ? '0 0 24px rgba(37,99,235,0.18), inset 0 0 0 1px rgba(96,165,250,0.15)' : 'none',
+                  transform: isSelected ? 'translateY(-1px)' : 'none',
+                }}
+              >
+                {/* Letter badge */}
+                <div style={{
+                  ...S.optionLetter,
+                  background: isSelected ? 'rgba(37,99,235,0.9)' : 'rgba(255,255,255,0.06)',
+                  color: isSelected ? '#fff' : 'rgba(255,255,255,0.5)',
+                  border: isSelected ? '1px solid rgba(96,165,250,0.4)' : '1px solid rgba(255,255,255,0.08)',
+                }}>
+                  {OPTION_LETTERS[idx]}
+                </div>
+
+                <span style={{ ...S.optionText, color: isSelected ? '#e0f2fe' : 'rgba(255,255,255,0.72)' }}>
+                  {option.text}
+                </span>
+
+                {isSelected && (
+                  <div style={S.optionCheck}>
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="white" strokeWidth="2.5">
+                      <circle cx="12" cy="12" r="10" fill="rgba(59,130,246,0.9)" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4" />
+                    </svg>
+                  </div>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── FOOTER NAV ── */}
+      <div style={S.quizFooter}>
+        {/* Back button */}
+        <button
+          onClick={handleBack}
+          disabled={currentQuestionIdx === 0}
+          style={{ ...S.navBtnSecondary, opacity: currentQuestionIdx === 0 ? 0 : 1, pointerEvents: currentQuestionIdx === 0 ? 'none' : 'auto' }}
+        >
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Sebelumnya
+        </button>
+
+        {/* Center: unanswered hint */}
+        {!isCurrentAnswered && (
+          <span style={S.hintText}>⇡ Pilih jawaban terlebih dahulu</span>
+        )}
+
+        {/* Next / Submit */}
+        {isLastQuestion ? (
+          <button
+            onClick={handleSubmit}
+            style={{
+              ...S.navBtnPrimary,
+              background: isCurrentAnswered
+                ? 'linear-gradient(135deg, #059669, #10b981)'
+                : 'rgba(255,255,255,0.06)',
+              boxShadow: isCurrentAnswered ? '0 0 28px rgba(16,185,129,0.35)' : 'none',
+              color: isCurrentAnswered ? '#fff' : 'rgba(255,255,255,0.3)',
+              cursor: isCurrentAnswered ? 'pointer' : 'not-allowed',
+            }}
+          >
+            Kumpulkan
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          </button>
+        ) : (
+          <button
+            onClick={handleNext}
+            style={{
+              ...S.navBtnPrimary,
+              background: isCurrentAnswered
+                ? 'linear-gradient(135deg, #1d4ed8, #0891b2)'
+                : 'rgba(255,255,255,0.06)',
+              boxShadow: isCurrentAnswered ? '0 0 28px rgba(37,99,235,0.35)' : 'none',
+              color: isCurrentAnswered ? '#fff' : 'rgba(255,255,255,0.3)',
+              cursor: isCurrentAnswered ? 'pointer' : 'not-allowed',
+            }}
+          >
+            Selanjutnya
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2.5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        )}
+      </div>
+
       <style>{`
-        @keyframes scaleIn {
-          0% { transform: scale(0); opacity: 0; }
-          100% { transform: scale(1); opacity: 1; }
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(22px); }
+          to   { opacity: 1; transform: translateY(0); }
         }
-        .scale-in-center {
-          animation: scaleIn 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to   { opacity: 1; }
         }
       `}</style>
     </div>
   );
 }
+
+/* ══════════════════════════════════════════════════════════════
+   STYLE TOKENS  (all inline, zero class conflict)
+══════════════════════════════════════════════════════════════ */
+const S: Record<string, React.CSSProperties> = {
+
+  // ── Shared ──────────────────────────────────────────────────
+  blob: {
+    position: 'absolute', borderRadius: '50%',
+    width: 320, height: 320,
+    filter: 'blur(80px)',
+    pointerEvents: 'none', zIndex: 0,
+  },
+
+  // ── Quiz Shell ──────────────────────────────────────────────
+  quizShell: {
+    position: 'relative',
+    background: 'linear-gradient(160deg, #07142a 0%, #060f20 100%)',
+    border: '1px solid rgba(59,130,246,0.12)',
+    borderRadius: 24,
+    boxShadow: '0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)',
+    display: 'flex', flexDirection: 'column',
+    fontFamily: "'Montserrat', system-ui, sans-serif",
+    overflow: 'hidden',
+    minHeight: 620,
+    maxWidth: 860, marginLeft: 'auto', marginRight: 'auto',
+    width: '100%',
+  },
+
+  // Quiz topbar
+  quizTopBar: {
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '22px 28px',
+    borderBottom: '1px solid rgba(255,255,255,0.05)',
+    background: 'rgba(0,0,0,0.2)',
+    gap: 16, flexWrap: 'wrap' as const,
+    position: 'relative', zIndex: 10,
+  },
+  quizTitleIcon: {
+    width: 42, height: 42, borderRadius: 12,
+    background: 'rgba(59,130,246,0.12)',
+    border: '1px solid rgba(59,130,246,0.22)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    flexShrink: 0,
+  },
+  quizTitleLabel: {
+    fontSize: 10, fontWeight: 700,
+    color: 'rgba(96,165,250,0.7)',
+    letterSpacing: '0.08em', textTransform: 'uppercase',
+    marginBottom: 2,
+  },
+  quizTitleText: {
+    fontSize: 15, fontWeight: 700, color: '#e0f2fe', margin: 0,
+    whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis',
+    maxWidth: 340,
+  },
+  progressPill: {
+    display: 'flex', alignItems: 'center', gap: 4,
+    background: 'rgba(59,130,246,0.08)',
+    border: '1px solid rgba(59,130,246,0.18)',
+    borderRadius: 99, padding: '6px 16px',
+    fontSize: 12, color: 'rgba(255,255,255,0.5)',
+  },
+  progressPillNum: { fontSize: 16, fontWeight: 800, color: '#60a5fa' },
+  progressPillSep: { color: 'rgba(255,255,255,0.2)', margin: '0 2px' },
+  progressPillTotal: { fontSize: 14, fontWeight: 600, color: 'rgba(255,255,255,0.45)' },
+  progressPillLabel: { marginLeft: 6, fontSize: 11, fontWeight: 600, color: 'rgba(255,255,255,0.3)' },
+  closeBtn: {
+    width: 36, height: 36, borderRadius: 10,
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.08)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    color: 'rgba(255,255,255,0.4)',
+    cursor: 'pointer', transition: 'all 0.18s',
+    flexShrink: 0,
+  },
+
+  // Progress bar
+  progressBarWrap: {
+    display: 'flex', alignItems: 'center', gap: 14,
+    padding: '14px 28px',
+    borderBottom: '1px solid rgba(255,255,255,0.04)',
+    background: 'rgba(0,0,0,0.15)',
+  },
+  progressBarTrack: {
+    flex: 1, height: 6, borderRadius: 99,
+    background: 'rgba(255,255,255,0.05)',
+    overflow: 'hidden',
+  },
+  progressBarFill: {
+    height: '100%', borderRadius: 99,
+    background: 'linear-gradient(90deg, #2563eb, #06b6d4)',
+    boxShadow: '0 0 12px rgba(37,99,235,0.5)',
+    transition: 'width 0.6s cubic-bezier(0.4,0,0.2,1)',
+  },
+  progressBarLabel: {
+    fontSize: 11, fontWeight: 700,
+    color: 'rgba(255,255,255,0.28)',
+    whiteSpace: 'nowrap',
+  },
+
+  // Dots navigator
+  dotsRow: {
+    display: 'flex', alignItems: 'center', gap: 8,
+    padding: '16px 28px 4px',
+    overflowX: 'auto',
+    position: 'relative', zIndex: 10,
+  },
+  dot: {
+    width: 32, height: 32, borderRadius: 10,
+    fontSize: 12, fontWeight: 700,
+    cursor: 'pointer',
+    transition: 'all 0.2s cubic-bezier(0.4,0,0.2,1)',
+    flexShrink: 0,
+  },
+
+  // Question body
+  questionBody: {
+    flex: 1, padding: '28px 28px 20px',
+    display: 'flex', flexDirection: 'column', gap: 24,
+    position: 'relative', zIndex: 10,
+    animation: 'slideUp 0.3s ease forwards',
+  },
+  questionChip: {
+    display: 'inline-flex', alignItems: 'center', gap: 6,
+    background: 'rgba(59,130,246,0.08)',
+    border: '1px solid rgba(59,130,246,0.18)',
+    borderRadius: 99, padding: '6px 14px',
+    fontSize: 12, fontWeight: 700,
+    color: 'rgba(96,165,250,0.9)',
+    letterSpacing: '0.03em',
+    alignSelf: 'flex-start',
+  },
+  questionText: {
+    fontSize: 20, fontWeight: 700, lineHeight: 1.55,
+    color: '#f0f8ff', margin: 0,
+    letterSpacing: '-0.2px',
+  },
+  questionImage: {
+    borderRadius: 14, overflow: 'hidden',
+    border: '1px solid rgba(255,255,255,0.07)',
+    maxWidth: 560,
+  },
+
+  // Options
+  optionsGrid: {
+    display: 'flex', flexDirection: 'column', gap: 12,
+    marginTop: 4,
+  },
+  optionBtn: {
+    display: 'flex', alignItems: 'center', gap: 16,
+    padding: '16px 20px',
+    borderRadius: 16,
+    cursor: 'pointer',
+    textAlign: 'left',
+    transition: 'all 0.2s cubic-bezier(0.4,0,0.2,1)',
+    position: 'relative',
+  },
+  optionLetter: {
+    width: 42, height: 42, borderRadius: 12,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: 15, fontWeight: 800,
+    flexShrink: 0,
+    transition: 'all 0.2s',
+  },
+  optionText: {
+    flex: 1, fontSize: 16, fontWeight: 500, lineHeight: 1.5,
+    transition: 'color 0.2s',
+  },
+  optionCheck: {
+    marginLeft: 'auto', flexShrink: 0,
+    animation: 'scaleIn 0.25s cubic-bezier(0.175,0.885,0.32,1.275) forwards',
+  },
+
+  // Footer nav
+  quizFooter: {
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '20px 28px',
+    borderTop: '1px solid rgba(255,255,255,0.05)',
+    background: 'rgba(0,0,0,0.2)',
+    gap: 16, flexWrap: 'wrap' as const,
+    position: 'relative', zIndex: 10,
+  },
+  navBtnSecondary: {
+    display: 'flex', alignItems: 'center', gap: 8,
+    padding: '12px 24px',
+    borderRadius: 14,
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 14, fontWeight: 700,
+    cursor: 'pointer', transition: 'all 0.2s',
+    fontFamily: "'Montserrat', system-ui, sans-serif",
+  },
+  navBtnPrimary: {
+    display: 'flex', alignItems: 'center', gap: 8,
+    padding: '12px 28px',
+    borderRadius: 14, border: 'none',
+    fontSize: 14, fontWeight: 700,
+    cursor: 'pointer', transition: 'all 0.2s',
+    fontFamily: "'Montserrat', system-ui, sans-serif",
+    letterSpacing: '0.02em',
+  },
+  hintText: {
+    fontSize: 12, color: 'rgba(255,255,255,0.25)',
+    fontWeight: 500, textAlign: 'center',
+    flex: 1,
+  },
+
+  /* ── Result Page ── */
+  resultPage: {
+    position: 'relative',
+    background: 'linear-gradient(160deg, #07142a 0%, #060f20 100%)',
+    border: '1px solid rgba(59,130,246,0.12)',
+    borderRadius: 24,
+    boxShadow: '0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04)',
+    fontFamily: "'Montserrat', system-ui, sans-serif",
+    overflow: 'hidden',
+    maxWidth: 900, marginLeft: 'auto', marginRight: 'auto',
+    width: '100%',
+    animation: 'fadeIn 0.4s ease',
+    display: 'flex', flexDirection: 'column', gap: 0,
+  },
+
+  resultHeader: {
+    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+    padding: '24px 32px',
+    borderBottom: '1px solid rgba(255,255,255,0.05)',
+    background: 'rgba(0,0,0,0.2)',
+    flexWrap: 'wrap' as const, gap: 16,
+  },
+  resultHeaderLeft: { display: 'flex', alignItems: 'center', gap: 16 },
+  resultIconBox: {
+    width: 48, height: 48, borderRadius: 14,
+    background: 'rgba(59,130,246,0.10)',
+    border: '1px solid rgba(59,130,246,0.22)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    flexShrink: 0,
+  },
+  resultTitle: { fontSize: 20, fontWeight: 800, color: '#f0f8ff', margin: 0 },
+  resultSubtitle: { fontSize: 12, color: 'rgba(255,255,255,0.35)', marginTop: 3 },
+  scorePill: {
+    padding: '8px 18px', borderRadius: 99,
+    fontSize: 13, fontWeight: 800, letterSpacing: '0.02em',
+  },
+
+  // Score row
+  scoreSummaryRow: {
+    display: 'flex', alignItems: 'center', gap: 28,
+    padding: '36px 32px',
+    flexWrap: 'wrap' as const,
+    borderBottom: '1px solid rgba(255,255,255,0.05)',
+    position: 'relative', zIndex: 1,
+  },
+
+  // Circle
+  circleCard: {
+    position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center',
+    flexShrink: 0,
+    width: 140, height: 140,
+  },
+  circleInner: {
+    position: 'absolute',
+    display: 'flex', flexDirection: 'column', alignItems: 'center',
+  },
+  circleValue: { fontSize: 38, fontWeight: 900, color: '#f0f8ff', lineHeight: 1 },
+  circleLabel: { fontSize: 11, color: 'rgba(255,255,255,0.4)', fontWeight: 700, marginTop: 4, letterSpacing: '0.06em', textTransform: 'uppercase' },
+
+  // Stats grid
+  statsGrid: {
+    flex: 1, display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: 14,
+    minWidth: 240,
+  },
+  statBox: {
+    padding: '20px 16px',
+    display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+  },
+  statNum: { fontSize: 32, fontWeight: 900, lineHeight: 1 },
+  statLabel: { fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.07em', marginTop: 4 },
+
+  // Review
+  reviewSection: {
+    margin: '0',
+    position: 'relative', zIndex: 1,
+  },
+  reviewHeader: {
+    display: 'flex', alignItems: 'center', gap: 10,
+    padding: '18px 32px',
+    background: 'rgba(0,0,0,0.15)',
+    borderBottom: '1px solid rgba(255,255,255,0.05)',
+    borderTop: 'none',
+  },
+  reviewTitle: { fontSize: 14, fontWeight: 700, color: 'rgba(255,255,255,0.6)', margin: 0, letterSpacing: '0.04em', textTransform: 'uppercase' },
+  reviewBody: { padding: '0 32px' },
+  reviewItem: {
+    padding: '28px 0',
+    display: 'flex', flexDirection: 'column', gap: 18,
+  },
+  reviewQRow: {
+    display: 'flex', alignItems: 'flex-start', gap: 14,
+    flexWrap: 'wrap' as const,
+  },
+  reviewQNum: {
+    width: 34, height: 34, borderRadius: 10,
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: 13, fontWeight: 800, flexShrink: 0,
+  },
+  reviewQText: {
+    flex: 1, fontSize: 15, fontWeight: 600, color: '#e2efff', lineHeight: 1.6,
+    margin: 0, minWidth: 180,
+  },
+  reviewBadge: {
+    fontSize: 11, fontWeight: 800, padding: '4px 12px', borderRadius: 99,
+    whiteSpace: 'nowrap', alignSelf: 'flex-start', marginTop: 2,
+    letterSpacing: '0.04em',
+  },
+  reviewOptions: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gap: 10,
+    paddingLeft: 48,
+  },
+  reviewOpt: {
+    display: 'flex', alignItems: 'center', gap: 10,
+    padding: '12px 14px', borderRadius: 12,
+    transition: 'all 0.18s',
+  },
+  reviewOptLetter: {
+    width: 26, height: 26, borderRadius: 7, flexShrink: 0,
+    background: 'rgba(255,255,255,0.05)',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    fontSize: 11, fontWeight: 800, color: 'rgba(255,255,255,0.4)',
+  },
+
+  // Actions (result page)
+  actions: {
+    display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 14,
+    padding: '24px 32px',
+    borderTop: '1px solid rgba(255,255,255,0.05)',
+    background: 'rgba(0,0,0,0.2)',
+    flexWrap: 'wrap' as const,
+  },
+  btnSecondary: {
+    display: 'inline-flex', alignItems: 'center', gap: 8,
+    padding: '12px 24px', borderRadius: 14,
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    color: 'rgba(255,255,255,0.6)',
+    fontSize: 14, fontWeight: 700, cursor: 'pointer',
+    fontFamily: "'Montserrat', system-ui, sans-serif",
+    transition: 'all 0.2s',
+  },
+  btnPrimary: {
+    display: 'inline-flex', alignItems: 'center', gap: 8,
+    padding: '12px 28px', borderRadius: 14, border: 'none',
+    background: 'linear-gradient(135deg, #1d4ed8, #0891b2)',
+    boxShadow: '0 0 28px rgba(37,99,235,0.35)',
+    color: '#fff', fontSize: 14, fontWeight: 700, cursor: 'pointer',
+    fontFamily: "'Montserrat', system-ui, sans-serif",
+    transition: 'all 0.2s',
+  },
+};
